@@ -1,0 +1,110 @@
+black	empty
+black	full	12	0
+black	full	30	0
+black	full	15	0
+black	full	24	0
+black	full	11	0
+black	empty
+black	full	13	0
+black	full	15	0
+black	empty
+row
+black	full	0	33
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+black	full	0	10
+white	empty
+white	empty
+black	full	7	0
+row
+black	full	0	26
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+black	full	12	7
+white	empty
+white	empty
+white	empty
+row
+black	full	0	8
+white	empty
+white	empty
+black	full	24	10
+white	empty
+white	empty
+white	empty
+black	full	17	11
+white	empty
+white	empty
+row
+black	full	0	20
+white	empty
+white	empty
+white	empty
+black	full	6	15
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
+black	empty
+black	full	19	0
+black	full	24	9
+white	empty
+white	empty
+black	full	10	16
+white	empty
+white	empty
+black	full	30	0
+black	full	13	0
+row
+black	full	0	27
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+black	full	19	17
+white	empty
+white	empty
+white	empty
+row
+black	full	0	4
+white	empty
+white	empty
+black	full	16	6
+white	empty
+white	empty
+white	empty
+black	full	7	11
+white	empty
+white	empty
+row
+black	full	0	22
+white	empty
+white	empty
+white	empty
+black	full	0	21
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
+black	empty
+black	full	0	17
+white	empty
+white	empty
+black	full	0	34
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
