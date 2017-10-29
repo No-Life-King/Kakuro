@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 public class GameBoard {
 	private Tile[][] tiles;
 	private static final int tileSize = 60;
+	SidePanel sidePanel;
 
 	public Parent createContent() {
 		int boardSize = tiles.length;
@@ -25,11 +26,12 @@ public class GameBoard {
 				Tile tile = tiles[i][j];
 				tile.setTranslateX(j * tileSize);
 				tile.setTranslateY(i * tileSize);
-
+				tile.setx(i);
+				tile.sety(j);
 				root.getChildren().add(tile);
 			}
 		}
-		SidePanel sidePanel = new SidePanel();
+		sidePanel = new SidePanel();
 		sidePanel.setTranslateX(boardSize*tileSize);
 		root.getChildren().add(sidePanel);
 		return root;
@@ -39,11 +41,32 @@ public class GameBoard {
 		return tileSize;
 	}
 
-	public boolean isValidNumber(String num) {
+	public SidePanel getSidePanel() {
+		return sidePanel;
+	}
 
-
-
-		return false;
+	public int[] validValues(int[] coords) {
+		int i = coords[0];
+		int j = coords[1];
+		int k = 0;
+		while(tiles[i][j].getType().equals("white")) {
+			i--; k++;
+		}
+		
+		int l = coords[0];
+		while(tiles[l][j].getType().equals("white")) {
+			l++; k++;
+		}
+		
+		BlackTile blackTile = (BlackTile) tiles[i][j];
+		int num1 = blackTile.getTop();
+		
+		int[] values = new int[k];
+		for (int x = k-1; x >= 0; x--) {
+			values[x] = k;
+		}
+		
+		return values;
 	}
 
 	public void readBoard(String filename) {

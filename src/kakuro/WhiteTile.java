@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -18,6 +19,7 @@ public class WhiteTile extends Tile {
 
 	int value;
 	TextField number = new TextField();
+	int[] validEntries;
 
 	public WhiteTile(GameBoard gameBoard) {
 		setSize(gameBoard.getSize());
@@ -29,6 +31,8 @@ public class WhiteTile extends Tile {
 		getChildren().addAll(border);
 		setType("white");
 
+
+
 		number.setMaxWidth(30);
 		number.setFont(Font.font(15));
 		number.setStyle("-fx-border-color: white;"
@@ -36,13 +40,25 @@ public class WhiteTile extends Tile {
 		number.setOnKeyReleased(new EventHandler<KeyEvent>() {
 		      public void handle(KeyEvent released) {
 		        String character = released.getText();
-		        if (!gameBoard.isValidNumber(character)) {
-		        	number.setText("");
-		        }
+
 
 		      }
 		});
 		getChildren().add(number);
+		this.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				int[] coords = {getx(), gety()};
+				validEntries = gameBoard.validValues(coords);
+				StringBuilder values = new StringBuilder();
+
+				for (int value: validEntries) {
+					values.append(value + "\n");
+				}
+
+				gameBoard.getSidePanel().setLabel(values.toString());
+			}
+		});
 	}
 
 	@Override

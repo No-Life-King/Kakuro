@@ -17,6 +17,7 @@ import javafx.scene.text.TextBoundsType;
 public class BlackTile extends Tile {
 
 	String bottomLeft, topRight;
+	int bottomLeftNum, topRightNum;
 	Rectangle border;
 
 	public BlackTile(int size) {
@@ -33,6 +34,8 @@ public class BlackTile extends Tile {
 	public void setValues(String value1, String value2) {
 		bottomLeft = value1;
 		topRight = value2;
+		bottomLeftNum = Integer.parseInt(value1);
+		topRightNum = Integer.parseInt(value2);
 		getChildren().clear();
 		Line line = new Line(0, 0, getSize(), getSize());
 		line.setStroke(Color.WHITE);
@@ -41,6 +44,14 @@ public class BlackTile extends Tile {
 
 		getChildren().add(createText());
 
+	}
+
+	public int getTop() {
+		return topRightNum;
+	}
+
+	public int getBottom() {
+		return bottomLeftNum;
 	}
 
 	private Text createText() {
