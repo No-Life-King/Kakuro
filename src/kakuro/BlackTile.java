@@ -2,7 +2,7 @@
  * @author Bobby Palmer
  * @author Phil Smith
  */
-package application;
+package kakuro;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -45,7 +45,7 @@ public class BlackTile extends Tile {
 
 	private Text createText() {
 		Text text;
-		text = new Text("      " + topRight + "\n" + bottomLeft);
+		text = new Text("     " + topRight + "\n" + bottomLeft);
 
 		text.setBoundsType(TextBoundsType.VISUAL);
 		text.setStyle(

@@ -2,7 +2,7 @@
  * @author Bobby Palmer
  * @author Phil Smith
  */
-package application;
+package kakuro;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;

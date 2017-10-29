@@ -1,31 +1,24 @@
-/**
- * @author Bobby Palmer
- * @author Phil Smith
- */
-package application;
+package kakuro;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import javafx.application.Application;
-import javafx.stage.Stage;
+
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
-public class Main extends Application {
-
+public class GameBoard {
 	private Tile[][] tiles;
-	private static final int tileSize = 75;
+	private static final int tileSize = 60;
 
-	private Parent createContent() {
+	public Parent createContent() {
 		int boardSize = tiles.length;
 
 		Pane root = new Pane();
 
-		root.setPrefSize(tileSize*boardSize, tileSize*boardSize);
+		root.setPrefSize(tileSize*(boardSize+3), tileSize*boardSize);
 
 		for (int i = 0; i < boardSize; i++) {
 			for (int j = 0; j < boardSize; j++) {
@@ -36,22 +29,24 @@ public class Main extends Application {
 				root.getChildren().add(tile);
 			}
 		}
-
+		SidePanel sidePanel = new SidePanel();
+		sidePanel.setTranslateX(boardSize*tileSize);
+		root.getChildren().add(sidePanel);
 		return root;
 	}
 
-	@Override
-	public void start(Stage primaryStage) {
-		try {
-			this.savedBoardReader("Resources/board1.txt");
-			primaryStage.setScene(new Scene(createContent()));
-			primaryStage.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+	public int getSize() {
+		return tileSize;
 	}
 
-	private void savedBoardReader(String filename) {
+	public boolean isValidNumber(String num) {
+
+
+
+		return false;
+	}
+
+	public void readBoard(String filename) {
 		String line;
 		ArrayList<Tile> rowTiles = new ArrayList<Tile>();
 
@@ -86,11 +81,10 @@ public class Main extends Application {
 					rowTiles.add(tile);
 				}
 				else if(data[0].equals("white")) {
-					rowTiles.add(new WhiteTile(tileSize));
+					rowTiles.add(new WhiteTile(this));
 				}
 
 			}
-
 			bufferedReader.close();
 		} catch(FileNotFoundException ex) {
 			System.out.println("Unable to find file.");
@@ -98,9 +92,4 @@ public class Main extends Application {
 			System.out.println("Unable to read file.");
 		}
 	}
-
-	public static void main(String[] args) {
-		launch(args);
-	}
-
 }
