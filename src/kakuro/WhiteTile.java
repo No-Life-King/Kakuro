@@ -4,31 +4,29 @@
  */
 package kakuro;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 public class WhiteTile extends Tile {
 
 	int value;
 	TextField number = new TextField();
 	int[] validEntries;
+	Rectangle displayed;
 
 	public WhiteTile(GameBoard gameBoard) {
 		setSize(gameBoard.getSize());
-		Rectangle border = new Rectangle(getSize(), getSize());
-		border.setFill(Color.WHITE);
-		border.setStroke(Color.BLACK);
+		Rectangle displayed = new Rectangle(getSize(), getSize());
+		displayed.setFill(Color.WHITE);
+		displayed.setStroke(Color.BLACK);
 
 		//setAlignment(Pos.CENTER);
-		getChildren().addAll(border);
+		getChildren().addAll(displayed);
 		setType("white");
 
 

@@ -4,7 +4,6 @@
  */
 package kakuro;
 
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 public abstract class Tile extends StackPane {

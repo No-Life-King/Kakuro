@@ -4,29 +4,25 @@
  */
 package kakuro;
 
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextBoundsType;
 
 public class BlackTile extends Tile {
 
 	String bottomLeft, topRight;
 	int bottomLeftNum, topRightNum;
-	Rectangle border;
+	Rectangle displayed;
 
 	public BlackTile(int size) {
 		setSize(size);
-		border = new Rectangle(size, size);
-		border.setFill(Color.BLACK);
-		border.setStroke(Color.WHITE);
+		displayed = new Rectangle(size, size);
+		displayed.setFill(Color.BLACK);
+		displayed.setStroke(Color.WHITE);
 		//setAlignment(Pos.CENTER);
-		getChildren().addAll(border);
+		getChildren().addAll(displayed);
 		setType("black");
 
 	}
@@ -40,10 +36,7 @@ public class BlackTile extends Tile {
 		Line line = new Line(0, 0, getSize(), getSize());
 		line.setStroke(Color.WHITE);
 
-		getChildren().addAll(border, line);
-
-		getChildren().add(createText());
-
+		getChildren().addAll(displayed, line, createText());
 	}
 
 	public int getTop() {
@@ -55,10 +48,10 @@ public class BlackTile extends Tile {
 	}
 
 	private Text createText() {
-		Text text;
-		text = new Text("     " + topRight + "\n" + bottomLeft);
+		Text text = new Text();
+		text.setBoundsType(TextBoundsType.VISUAL);	
+		text.setText("     " + topRight + "\n" + bottomLeft);
 
-		text.setBoundsType(TextBoundsType.VISUAL);
 		text.setStyle(
 				"-fx-font-family: \"Times New Roman\";" +
 						"-fx-font-size: 24px;"	+

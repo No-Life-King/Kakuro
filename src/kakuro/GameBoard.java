@@ -5,21 +5,31 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import javafx.application.Platform;
 import javafx.scene.Parent;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
 public class GameBoard {
+	
 	private Tile[][] tiles;
 	private static final int tileSize = 60;
-	SidePanel sidePanel;
+	BorderPane root = new BorderPane();
+	GridPane appContent = new GridPane();
+	SidePanel sidePanel = new SidePanel();
 
 	public Parent createContent() {
 		int boardSize = tiles.length;
+		
+		// This needs to be here for now.
+		readBoard("board1.txt");
 
-		Pane root = new Pane();
-
-		root.setPrefSize(tileSize*(boardSize+3), tileSize*boardSize);
+		root.setPrefSize(tileSize*(boardSize+5), tileSize*(boardSize+1));
 
 		for (int i = 0; i < boardSize; i++) {
 			for (int j = 0; j < boardSize; j++) {
@@ -28,13 +38,31 @@ public class GameBoard {
 				tile.setTranslateY(i * tileSize);
 				tile.setx(i);
 				tile.sety(j);
-				root.getChildren().add(tile);
+				appContent.getChildren().add(tile);
 			}
 		}
-		sidePanel = new SidePanel();
-		sidePanel.setTranslateX(boardSize*tileSize);
-		root.getChildren().add(sidePanel);
+		
+		root.setTop(this.generateMenu(root));
+		root.setCenter(appContent);
+		root.setRight(sidePanel);
 		return root;
+	}
+	
+	public MenuBar generateMenu(Pane root) {
+		MenuBar menuBar = new MenuBar();
+		
+		Menu fileMenu = new Menu("File");
+		MenuItem newMenuItem = new MenuItem("Open");
+		MenuItem saveMenuItem = new MenuItem("Save");
+		MenuItem exitMenuItem = new MenuItem("Exit");
+		exitMenuItem.setOnAction(actionEvent -> Platform.exit());
+
+		fileMenu.getItems().addAll(newMenuItem, saveMenuItem,
+				new SeparatorMenuItem(), exitMenuItem);
+		
+		menuBar.getMenus().addAll(fileMenu);
+		
+		return menuBar;
 	}
 
 	public int getSize() {
@@ -114,5 +142,9 @@ public class GameBoard {
 		} catch(IOException ex) {
 			System.out.println("Unable to read file.");
 		}
+	}
+	
+	public void saveFile() {
+		
 	}
 }
