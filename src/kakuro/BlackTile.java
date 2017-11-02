@@ -8,7 +8,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextBoundsType;
 
 public class BlackTile extends Tile {
 
@@ -20,8 +19,6 @@ public class BlackTile extends Tile {
 		setSize(size);
 		displayed = new Rectangle(size, size);
 		displayed.setFill(Color.BLACK);
-		displayed.setStroke(Color.WHITE);
-		//setAlignment(Pos.CENTER);
 		getChildren().addAll(displayed);
 		setType("black");
 
@@ -32,11 +29,7 @@ public class BlackTile extends Tile {
 		topRight = value2;
 		bottomLeftNum = Integer.parseInt(value1);
 		topRightNum = Integer.parseInt(value2);
-		getChildren().clear();
-		Line line = new Line(0, 0, getSize(), getSize());
-		line.setStroke(Color.WHITE);
-
-		getChildren().addAll(displayed, line, createText());
+		this.createText();
 	}
 
 	public int getTop() {
@@ -47,18 +40,38 @@ public class BlackTile extends Tile {
 		return bottomLeftNum;
 	}
 
-	private Text createText() {
-		Text text = new Text();
-		text.setBoundsType(TextBoundsType.VISUAL);	
-		text.setText("     " + topRight + "\n" + bottomLeft);
-
-		text.setStyle(
-				"-fx-font-family: \"Times New Roman\";" +
-						"-fx-font-size: 24px;"	+
-						"-fx-fill: rgb(255,255,255);"
-				);
-
-		return text;
+	private void createText() {
+		Line line = new Line(0, 0, getSize(), getSize());
+		line.setStroke(Color.WHITE);
+		getChildren().addAll(line);
+		
+		if(topRightNum != 0) {
+			Text tR = new Text(topRight);
+			tR.setTranslateX(14.00);
+			tR.setTranslateY(-14.00);
+	
+			tR.setStyle(
+					"-fx-font-family: \"Times New Roman\";" +
+							"-fx-font-size: 24px;"	+
+							"-fx-fill: rgb(255,255,255);"
+					);
+			
+			getChildren().addAll(tR);
+		} 
+		
+		if(bottomLeftNum != 0) {
+			Text bL = new Text(bottomLeft);
+			bL.setTranslateX(-14.00);
+			bL.setTranslateY(14.00);
+	
+			bL.setStyle(
+					"-fx-font-family: \"Times New Roman\";" +
+							"-fx-font-size: 24px;"	+
+							"-fx-fill: rgb(255,255,255);"
+					);
+			
+			getChildren().addAll(bL);
+		}
 	}
 
 	@Override

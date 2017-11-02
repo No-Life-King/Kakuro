@@ -18,17 +18,14 @@ public class WhiteTile extends Tile {
 	TextField number = new TextField();
 	int[] validEntries;
 	Rectangle displayed;
+	String userInput = "";
 
 	public WhiteTile(GameBoard gameBoard) {
 		setSize(gameBoard.getSize());
 		Rectangle displayed = new Rectangle(getSize(), getSize());
 		displayed.setFill(Color.WHITE);
 		displayed.setStroke(Color.BLACK);
-
-		//setAlignment(Pos.CENTER);
-		getChildren().addAll(displayed);
 		setType("white");
-
 
 
 		number.setMaxWidth(30);
@@ -37,26 +34,28 @@ public class WhiteTile extends Tile {
 					  + "-fx-background-color: white;");
 		number.setOnKeyReleased(new EventHandler<KeyEvent>() {
 		      public void handle(KeyEvent released) {
-		        String character = released.getText();
-
-
+		    	  userInput += released.getText();
+		    	  try {
+		    		  value = Integer.parseInt(userInput);
+		    	  } catch(NumberFormatException nfe) {
+		    		  number.clear();
+		    	  }
 		      }
 		});
-		getChildren().add(number);
-		this.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+		
+		
+		displayed.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
 				int[] coords = {getx(), gety()};
 				validEntries = gameBoard.validValues(coords);
-				StringBuilder values = new StringBuilder();
 
-				for (int value: validEntries) {
-					values.append(value + "\n");
-				}
-
-				gameBoard.getSidePanel().setLabel(values.toString());
+				gameBoard.getSidePanel().displayValues(validEntries);
 			}
 		});
+		
+		getChildren().clear();
+		getChildren().addAll(displayed, number);
 	}
 
 	@Override

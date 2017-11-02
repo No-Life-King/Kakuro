@@ -21,24 +21,19 @@ public class GameBoard {
 	private static final int tileSize = 60;
 	BorderPane root = new BorderPane();
 	GridPane appContent = new GridPane();
-	SidePanel sidePanel = new SidePanel();
+	SidePanel sidePanel = new SidePanel(200, tileSize*10);
 
 	public Parent createContent() {
 		int boardSize = tiles.length;
-		
-		// This needs to be here for now.
-		readBoard("board1.txt");
 
-		root.setPrefSize(tileSize*(boardSize+5), tileSize*(boardSize+1));
+		root.setPrefSize(tileSize*(boardSize+4), tileSize*(boardSize+1));
 
 		for (int i = 0; i < boardSize; i++) {
 			for (int j = 0; j < boardSize; j++) {
 				Tile tile = tiles[i][j];
-				tile.setTranslateX(j * tileSize);
-				tile.setTranslateY(i * tileSize);
 				tile.setx(i);
 				tile.sety(j);
-				appContent.getChildren().add(tile);
+				appContent.add(tile, j, i);
 			}
 		}
 		
