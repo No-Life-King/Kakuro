@@ -26,9 +26,11 @@ public class GameBoard {
 	private SidePanel sidePanel;
 	private ArrayList<Row> rows = new ArrayList<Row>();
 	private ArrayList<Column> columns = new ArrayList<Column>();
+	private int boardSize;
 
 	public Parent createContent() {
 		int boardSize = tiles.length;
+		this.boardSize = boardSize;
 
 		root.setMaxSize(tileSize*(boardSize+4), tileSize*(boardSize+1));
 
@@ -122,17 +124,33 @@ public class GameBoard {
 		MenuBar menuBar = new MenuBar();
 
 		Menu fileMenu = new Menu("File");
-		MenuItem newMenuItem = new MenuItem("Open");
+		MenuItem openMenuItem = new MenuItem("Open");
 		MenuItem saveMenuItem = new MenuItem("Save");
 		MenuItem exitMenuItem = new MenuItem("Exit");
 		exitMenuItem.setOnAction(actionEvent -> Platform.exit());
 
-		fileMenu.getItems().addAll(newMenuItem, saveMenuItem,
+		Menu gameMenu = new Menu("Game");
+		MenuItem cheat = new MenuItem("Cheat");
+		cheat.setOnAction(actionEvent -> cheat());
+		gameMenu.getItems().addAll(cheat);
+
+
+		fileMenu.getItems().addAll(openMenuItem, saveMenuItem,
 				new SeparatorMenuItem(), exitMenuItem);
 
-		menuBar.getMenus().addAll(fileMenu);
+		menuBar.getMenus().addAll(fileMenu, gameMenu);
 
 		return menuBar;
+	}
+
+	private void cheat() {
+		for (int x=0; x<boardSize; x++) {
+			for (int y=0; y<10; y++) {
+				if (validValues(x, y).size() == 1) {
+					((WhiteTile) tiles[x][y]).setValue((int) validValues(x, y).toArray()[0]);
+				}
+			}
+		}
 	}
 
 	public int getSize() {
@@ -261,4 +279,5 @@ public class GameBoard {
 		tileCol.addEntered(value);
 
 	}
+
 }
