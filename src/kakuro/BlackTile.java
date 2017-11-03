@@ -11,9 +11,9 @@ import javafx.scene.text.Text;
 
 public class BlackTile extends Tile {
 
-	String bottomLeft, topRight;
-	int bottomLeftNum, topRightNum;
-	Rectangle displayed;
+	private String bottomLeft, topRight;
+	private int bottomLeftNum, topRightNum;
+	private Rectangle displayed;
 
 	public BlackTile(int size) {
 		setSize(size);
@@ -44,32 +44,32 @@ public class BlackTile extends Tile {
 		Line line = new Line(0, 0, getSize(), getSize());
 		line.setStroke(Color.WHITE);
 		getChildren().addAll(line);
-		
+
 		if(topRightNum != 0) {
 			Text tR = new Text(topRight);
 			tR.setTranslateX(14.00);
 			tR.setTranslateY(-14.00);
-	
+
 			tR.setStyle(
 					"-fx-font-family: \"Times New Roman\";" +
 							"-fx-font-size: 24px;"	+
 							"-fx-fill: rgb(255,255,255);"
 					);
-			
+
 			getChildren().addAll(tR);
-		} 
-		
+		}
+
 		if(bottomLeftNum != 0) {
 			Text bL = new Text(bottomLeft);
 			bL.setTranslateX(-14.00);
 			bL.setTranslateY(14.00);
-	
+
 			bL.setStyle(
 					"-fx-font-family: \"Times New Roman\";" +
 							"-fx-font-size: 24px;"	+
 							"-fx-fill: rgb(255,255,255);"
 					);
-			
+
 			getChildren().addAll(bL);
 		}
 	}
