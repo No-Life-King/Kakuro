@@ -6,7 +6,7 @@ import java.util.HashSet;
 public class Row {
 	private ArrayList<Tile> tiles = new ArrayList<Tile>();
 	private HashSet<Integer> validValues = new HashSet<Integer>();
-	private HashSet<Integer> enteredValues = new HashSet<Integer>();
+	private ArrayList<Integer> enteredValues = new ArrayList<Integer>();
 	private int sum;
 
 	public void add(Tile tile) {
@@ -37,7 +37,7 @@ public class Row {
 
 	public void addEntered(int value) {
 		enteredValues.add(value);
-		validValues.remove(value);
+		calcValidValues();
 	}
 
 	public boolean hasEntry(int value) {
@@ -48,59 +48,84 @@ public class Row {
 		return false;
 	}
 
+	private int sumEnteredValues() {
+		int sum = 0;
+		for (int value: enteredValues) {
+			sum += value;
+		}
+
+		return sum;
+	}
+
 	public void calcValidValues() {
 		int max = 9;
 		int sum = 0;
-		int pivot = tiles.size()-1;
-		int[] row = new int[tiles.size()];
+		int pivot = tiles.size()-enteredValues.size()-1;
+		int numTiles = tiles.size();
+		int numEnteredValues = enteredValues.size();
+		int[] values;
 
-		for (int x = 0; x <= pivot; x++) {
-			row[x] = x+1;
-		}
+		if (numTiles == numEnteredValues) {
+			validValues.clear();
+		} else if ((numTiles - numEnteredValues) == 1) {
+			validValues.clear();
+			validValues.add(this.sum - sumEnteredValues());
+		} else {
+			values = new int[numTiles-numEnteredValues];
 
-		while (true) {
-			for (int value: row) {
-				sum += value;
+			for (int x = 0; x < values.length; x++) {
+				values[x] = x+1;
 			}
 
-			if (sum < this.sum) {
-				row[pivot] += 1;
-			} else {
-				break;
+			while (true) {
+				for (int value: values) {
+					sum += value;
+				}
+
+				if (sum < this.sum - sumEnteredValues()) {
+					values[pivot] += 1;
+				} else {
+					break;
+				}
+
+				if (values[pivot] == max) {
+					pivot--;
+					max--;
+				}
+
+				sum = 0;
 			}
 
-			if (row[pivot] == max) {
-				pivot--;
-				max--;
+			for (int value: values) {
+				validValues.add(value);
 			}
 
-			sum = 0;
-		}
+			if (pivot > 0) {
+				while ((values[pivot] - values[pivot-1]) > 2) {
+					values[pivot] -= 1;
+					values[pivot-1] += 1;
 
-		for (int value: row) {
-			validValues.add(value);
-		}
-
-		if (pivot > 0) {
-			while ((row[pivot] - row[pivot-1]) > 2) {
-				row[pivot] -= 1;
-				row[pivot-1] += 1;
-
-				for (int value: row) {
-					validValues.add(value);
+					for (int value: values) {
+						validValues.add(value);
+					}
 				}
 			}
-		}
 
-		if (pivot == 0) {
-			while ((row[pivot+1] - row[0]) > 2) {
-				row[pivot+1] -= 1;
-				row[0] += 1;
+			if (pivot == 0) {
+				while ((values[pivot+1] - values[0]) > 2) {
+					values[pivot+1] -= 1;
+					values[0] += 1;
 
-				for (int value: row) {
-					validValues.add(value);
+					for (int value: values) {
+						validValues.add(value);
+					}
 				}
 			}
+
+			for (int value: enteredValues) {
+				validValues.remove(value);
+			}
+
 		}
 
 	}

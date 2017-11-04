@@ -78,6 +78,7 @@ public class GameBoard {
 
 		for (Column col: columns) {
 			col.calcValidValues();
+			//System.out.println(col);
 		}
 
 		x = 1;
@@ -109,9 +110,10 @@ public class GameBoard {
 			y = 1;
 			x++;
 		}
-
+		System.out.println();
 		for (Row row: rows) {
 			row.calcValidValues();
+			//System.out.println(row);
 		}
 
 		root.setTop(this.generateMenu(root));
@@ -164,23 +166,27 @@ public class GameBoard {
 	public HashSet<Integer> validValues(int x, int y) {
 		HashSet<Integer> intersect = new HashSet<Integer>();
 		HashSet<Integer> rowValues = new HashSet<Integer>();
-
 		for (Row row: rows) {
 			if (row.containsTile(x, y)) {
 				rowValues = row.getValidValues();
 			}
 		}
 
+		HashSet<Integer> colValues = new HashSet<Integer>();
 		for (Column col: columns) {
 			if (col.containsTile(x, y)) {
-				HashSet<Integer> colValues = col.getValidValues();
-				for (int num: colValues) {
-					if (rowValues.contains(num)) {
-						intersect.add(num);
-					}
+				colValues = col.getValidValues();
+			}
+		}
+
+		for (int rowValue: rowValues) {
+			for (int colValue: colValues) {
+				if (rowValue == colValue) {
+					intersect.add(colValue);
 				}
 			}
 		}
+
 
 		return intersect;
 	}
@@ -277,7 +283,6 @@ public class GameBoard {
 
 		tileRow.addEntered(value);
 		tileCol.addEntered(value);
-
 	}
 
 }
