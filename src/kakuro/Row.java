@@ -58,12 +58,8 @@ public class Row {
 	}
 
 	public void calcValidValues() {
-		int max = 9;
-		int sum = 0;
-		int pivot = tiles.size()-enteredValues.size()-1;
 		int numTiles = tiles.size();
 		int numEnteredValues = enteredValues.size();
-		int[] values;
 
 		if (numTiles == numEnteredValues) {
 			validValues.clear();
@@ -71,63 +67,95 @@ public class Row {
 			validValues.clear();
 			validValues.add(this.sum - sumEnteredValues());
 		} else {
-			values = new int[numTiles-numEnteredValues];
-
-			for (int x = 0; x < values.length; x++) {
-				values[x] = x+1;
-			}
-
-			while (true) {
-				for (int value: values) {
-					sum += value;
-				}
-
-				if (sum < this.sum - sumEnteredValues()) {
-					values[pivot] += 1;
-				} else {
-					break;
-				}
-
-				if (values[pivot] == max) {
-					pivot--;
-					max--;
-				}
-
-				sum = 0;
-			}
-
-			for (int value: values) {
-				validValues.add(value);
-			}
-
-			if (pivot > 0) {
-				while ((values[pivot] - values[pivot-1]) > 2) {
-					values[pivot] -= 1;
-					values[pivot-1] += 1;
-
-					for (int value: values) {
-						validValues.add(value);
-					}
+			ArrayList<Integer[]> sums = getValidSums(numTiles-numEnteredValues);
+			validValues.clear();
+			
+			for (Integer[] addends: sums) {
+				for (int validValue: addends) {
+					validValues.add(validValue);
 				}
 			}
-
-			if (pivot == 0) {
-				while ((values[pivot+1] - values[0]) > 2) {
-					values[pivot+1] -= 1;
-					values[0] += 1;
-
-					for (int value: values) {
-						validValues.add(value);
-					}
-				}
-			}
-
-			for (int value: enteredValues) {
-				validValues.remove(value);
-			}
-
 		}
 
+	}
+
+	private ArrayList<Integer[]> getValidSums(int addends) {
+		ArrayList<Integer[]> sums = new ArrayList<Integer[]>();
+		int max = 9;
+		int sum = 0;
+		int pivot = tiles.size()-enteredValues.size()-1;
+		Integer[] values = new Integer[addends];
+		
+		for (int x = 0; x < addends; x++) {
+			values[x] = x+1;
+		}
+
+		while (true) {
+			for (int value: values) {
+				sum += value;
+			}
+
+			if (sum < this.sum - sumEnteredValues()) {
+				values[pivot] += 1;
+			} else {
+				break;
+			}
+
+			if (values[pivot] == max) {
+				pivot--;
+				max--;
+			}
+
+			sum = 0;
+		}
+
+		sums.add(values.clone());
+
+		if (pivot > 0) {
+			while ((values[pivot] - values[pivot-1]) > 2) {
+				values[pivot] -= 1;
+				values[pivot-1] += 1;
+
+				boolean valid = true;
+				for (int value: values) {
+					if (enteredValues.contains(value)) {
+						valid = false;
+					}
+				}
+				
+				if (valid) {
+					sums.add(values.clone());
+				}
+			}
+		}
+		
+		for (Integer[] valueArray: sums) {
+			for (int value: valueArray) {
+				System.out.print(value + ", ");
+			}
+			System.out.println();
+		}
+		
+		if (pivot == 0) {
+			while ((values[pivot+1] - values[0]) > 2) {
+				values[pivot+1] -= 1;
+				values[0] += 1;
+
+				boolean valid = true;
+				for (int value: values) {
+					if (enteredValues.contains(value)) {
+						valid = false;
+					}
+				}
+				
+				if (valid) {
+					sums.add(values.clone());
+				}
+			}
+		}
+		
+
+		return sums;
 	}
 
 	public boolean containsTile(int x, int y) {
