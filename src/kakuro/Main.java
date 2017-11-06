@@ -20,12 +20,12 @@ public class Main extends Application {
 			GameBoard gameBoard = new GameBoard();
 			gameBoard.readBoard("board1.txt");
 			Scene scene = new Scene(gameBoard.createContent());
-			// scene.getStylesheets().add("application.css");
+			scene.getStylesheets().add(Main.class.getResource("Main.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Kakuro!");
 			primaryStage.show();
 		} catch(Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(); 	
 		}
 	}
 
