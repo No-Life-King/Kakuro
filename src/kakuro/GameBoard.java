@@ -118,7 +118,7 @@ public class GameBoard {
 
 		root.setTop(this.generateMenu(root));
 		root.setCenter(appContent);
-		root.setRight(sidePanel);
+		//root.setRight(sidePanel);
 		return root;
 	}
 
@@ -149,7 +149,7 @@ public class GameBoard {
 		for (int x=0; x<boardSize; x++) {
 			for (int y=0; y<10; y++) {
 				if (validValues(x, y).size() == 1) {
-					((WhiteTile) tiles[x][y]).setValue((int) validValues(x, y).toArray()[0]);
+					//((WhiteTile) tiles[x][y]).setValue((int) validValues(x, y).toArray()[0]);
 				}
 			}
 		}

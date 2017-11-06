@@ -5,23 +5,18 @@
 package kakuro;
 
 import java.util.HashSet;
-
-import javafx.event.EventHandler;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 public class WhiteTile extends Tile {
 
-	private int value;
-	private TextField number = new TextField();
-	private HashSet<Integer> validEntries;
-	private Rectangle displayed;
-	private String userInput = "";
 	private GameBoard g;
+	private Label label = new Label();
+	private ComboBox<String> combo = new ComboBox<>();
+	private String value;
 
 	public WhiteTile(GameBoard gameBoard) {
 		g = gameBoard;
@@ -30,47 +25,64 @@ public class WhiteTile extends Tile {
 		displayed.setFill(Color.WHITE);
 		displayed.setStroke(Color.BLACK);
 		setType("white");
+		
+		combo.getSelectionModel().select(0);
+        combo.setVisible(false);
+        
+        label.setVisible(true);
+        label.setFont(new Font("Times New Roman", 24));
+        value = combo.getValue();
+        label.setText(value);
 
-		number.setMaxWidth(30);
-		number.setFont(Font.font(15));
-		number.setStyle("-fx-border-color: white;"
-					  + "-fx-background-color: white;");
-		number.setOnKeyReleased(new EventHandler<KeyEvent>() {
-		      public void handle(KeyEvent released) {
-		    	  userInput += released.getText();
-		    	  try {
-		    		  value = Integer.parseInt(userInput);
-		    		  if (gameBoard.validate(value, getx(), gety())) {
-		    			  gameBoard.setEntered(value, getx(), gety());
-		    			  number.setText(Integer.toString(value));
-
-		    		  } else {
-		    			  number.clear();
-		    		  }
-		    	  } catch(NumberFormatException nfe) {
-		    		  number.clear();
-		    	  }
-		      }
-		});
-
-
-		displayed.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				validEntries = gameBoard.validValues(getx(), gety());
-
-				gameBoard.getSidePanel().displayValues(validEntries);
-			}
-		});
+        this.setOnMouseEntered(event -> {
+        	combo.setVisible(true);
+        	this.setComboLabels();
+        	value = combo.getValue();
+            label.setText(value);
+        	});
+        
+        combo.showingProperty().addListener(observable -> {
+            if (!combo.isShowing()) {
+                combo.setVisible(false);
+            }
+            value = combo.getValue();
+            label.setText(value);
+        });
+        
+        this.setOnMouseExited(event -> {
+        	 if (!combo.isShowing()) {
+                 combo.setVisible(false);
+             }
+        	 value = combo.getValue();
+             label.setText(value);
+        });
 
 		getChildren().clear();
-		getChildren().addAll(displayed, number);
+		getChildren().addAll(displayed, label, combo);
 	}
-
-	public void setValue(int value) {
-		number.setText(Integer.toString(value));
-		this.value = value;
-		g.setEntered(value, getx(), gety());
+	
+	private void setComboLabels() {
+		HashSet<Integer> validValues = g.validValues(getx(), gety());
+		String[] validEntries = new String[validValues.size()+1];
+		validEntries[0] = "";
+		
+		int counter = 1;
+		for(int i : validValues) {
+			validEntries[counter] = "" + i;
+			counter += 1;
+		}
+		
+		combo.getItems().setAll(validEntries);
+	}
+	
+	public int getValue() {
+		value = combo.getValue();
+		try {
+			int numValue = Integer.parseInt(value);
+			return numValue;
+		} catch(Exception e) {
+			return 0;
+		}
 	}
 
 	@Override
