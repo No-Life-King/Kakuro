@@ -13,6 +13,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -137,6 +138,7 @@ public class GameBoard {
 		gameMenu.getItems().addAll(cheat);
 
 
+
 		fileMenu.getItems().addAll(openMenuItem, saveMenuItem,
 				new SeparatorMenuItem(), exitMenuItem);
 
@@ -145,11 +147,14 @@ public class GameBoard {
 		return menuBar;
 	}
 
-	private void cheat() {
+	public void cheat() {
+		OUTER:
 		for (int x=0; x<boardSize; x++) {
 			for (int y=0; y<10; y++) {
-				if (validValues(x, y).size() == 1) {
-					//((WhiteTile) tiles[x][y]).setValue((int) validValues(x, y).toArray()[0]);
+				HashSet<Integer> tileValues = validValues(x, y);
+				if (tileValues.size() == 1) {
+					((WhiteTile) tiles[x][y]).setValue((int) tileValues.toArray()[0]);
+					break OUTER;
 				}
 			}
 		}
@@ -169,6 +174,7 @@ public class GameBoard {
 		for (Row row: rows) {
 			if (row.containsTile(x, y)) {
 				rowValues = row.getValidValues();
+				break;
 			}
 		}
 
@@ -176,6 +182,7 @@ public class GameBoard {
 		for (Column col: columns) {
 			if (col.containsTile(x, y)) {
 				colValues = col.getValidValues();
+				break;
 			}
 		}
 
@@ -283,6 +290,9 @@ public class GameBoard {
 
 		tileRow.addEntered(value);
 		tileCol.addEntered(value);
+
+		System.out.println(tileRow);
+		System.out.println(tileCol);
 	}
 
 }
