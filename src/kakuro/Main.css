@@ -7,7 +7,7 @@
 }
 
 /* MENU BAR + Top-level MENU BUTTONS */
-/*** The menu bar itself ***/    
+/*** The menu bar itself ***/
 .menu-bar {
     -fx-background-color: -fx-my-menu-color;
 }
@@ -42,39 +42,50 @@
 }
 
 /* MENU ITEM (children of a MENU BUTTON) */
-/*** The item itself (not hovered / focused) ***/    
+/*** The item itself (not hovered / focused) ***/
 .menu-item {
-    -fx-background-color: -fx-my-menu-color; 
+    -fx-background-color: -fx-my-menu-color;
 }
 
-/*** The item's label (not hovered / focused) ***/   
+/*** The item's label (not hovered / focused) ***/
 .menu-item .label {
     -fx-text-fill: -fx-my-menu-font-color;
 }
 
-/*** The item's label (disabled) ***/   
+/*** The item's label (disabled) ***/
 .menu-item .label:disabled {
     -fx-opacity: 1.0;
-}    
-
-/*** The item itself (hovered / focused) ***/    
-.menu-item:focused, .menu-item:hovered {
-    -fx-background-color: -fx-my-menu-color-highlighted; 
 }
 
-/*** The item's label (hovered / focused) ***/  
+/*** The item itself (hovered / focused) ***/
+.menu-item:focused, .menu-item:hovered {
+    -fx-background-color: -fx-my-menu-color-highlighted;
+}
+
+/*** The item's label (hovered / focused) ***/
 .menu-item:focused .label, .menu-item:hovered .label {
     -fx-text-fill: -fx-my-menu-font-color-highlighted;
 }
 
 /* CONTEXT MENU */
-/*** The context menu that contains a menu's menu items ***/  
+/*** The context menu that contains a menu's menu items ***/
 .context-menu {
-    -fx-background-color: -fx-my-menu-color; 
+    -fx-background-color: -fx-my-menu-color;
 }
 
 .combo-box-base {
     -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, white;
     -fx-background-insets: 0 0 -1 0, 0, 1, 2;
     -fx-background-radius: 3px, 3px, 2px, 1px;
+    -fx-pref-width: 60;
+    -fx-pref-height: 60;
+}
+
+.combo-box .arrow, .combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .list-cell {
+	-fx-alignment: center;
+	-fx-font: 18 px;
 }
