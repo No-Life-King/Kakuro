@@ -25,7 +25,7 @@ import javafx.stage.Stage;
 public class GameBoard implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private transient Stage primaryStage;
@@ -37,11 +37,13 @@ public class GameBoard implements Serializable{
 	private transient ArrayList<Row> rows = new ArrayList<Row>();
 	private transient ArrayList<Column> columns = new ArrayList<Column>();
 	private int boardSize;
-	
+	private int enteredValues = 0;
+	private int whiteTiles = 0;
+
 	public GameBoard(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 	}
-	
+
 	public Parent createContent() {
 		this.openDefault();
 		int boardSize = tiles.length;
@@ -106,6 +108,7 @@ public class GameBoard implements Serializable{
 			while (y <= upperBound) {
 				if (tiles[x][y].getType().equals("white")) {
 					row.add(tiles[x][y]);
+					whiteTiles++;
 				} else {
 					if (row.getSize() > 0) {
 						rows.add(row);
@@ -145,12 +148,12 @@ public class GameBoard implements Serializable{
 		MenuItem saveMenuItem = new MenuItem("Save");
 		MenuItem cheat = new MenuItem("Cheat");
 		MenuItem exitMenuItem = new MenuItem("Exit");
-		
+
 		readMenuItem.setOnAction(actionEvent -> open());
 		saveMenuItem.setOnAction(actionEvent -> save());
 		cheat.setOnAction(actionEvent -> cheat());
 		exitMenuItem.setOnAction(actionEvent -> Platform.exit());
-		
+
 		gameMenu.getItems().addAll(newMenuItem, readMenuItem, saveMenuItem, cheat, new SeparatorMenuItem(), exitMenuItem);
 
 		menuBar.getMenus().addAll(gameMenu);
@@ -294,23 +297,37 @@ public class GameBoard implements Serializable{
 	public void setEntered(int value, int x, int y) {
 		Row tileRow = getRow(x, y);
 		Column tileCol = getColumn(x, y);
-
+		enteredValues++;
 		tileRow.addEntered(value);
 		tileCol.addEntered(value);
-
-		System.out.println(tileRow);
-		System.out.println(tileCol);
 	}
-	
+
+	public void deleteEntry(int value, int x, int y) {
+		Row tileRow = getRow(x, y);
+		Column tileCol = getColumn(x, y);
+		enteredValues--;
+		tileRow.deleteEntered(value);
+		tileCol.deleteEntered(value);
+	}
+
+	public boolean winner() {
+		if (whiteTiles == enteredValues) {
+			System.out.println("You Win!");
+			return true;
+		}
+
+		return false;
+	}
+
 	public void save() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save Game");
-		  
+
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("KAKURO files (*.kakuro)", "*.kakuro");
         fileChooser.getExtensionFilters().add(extFilter);
 
         File file = fileChooser.showSaveDialog(primaryStage);
-        
+
         if(file != null){
         	try {
     			FileOutputStream f = new FileOutputStream(file);
@@ -326,22 +343,22 @@ public class GameBoard implements Serializable{
     		}
         }
 	}
-	
+
 	public void open() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Game");
-		  
+
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(".TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
 
         File file = fileChooser.showOpenDialog(primaryStage);
-        
+
         if(file != null){
         	this.readBoard(file);
         	this.createContent();
         }
 	}
-	
+
 	private void openDefault() {
 		File file = new File("board1.txt");
 		this.readBoard(file);

@@ -54,11 +54,16 @@ public class WhiteTile extends Tile {
 
         combo.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
-                g.setEntered(Integer.parseInt(t1), getx(), gety());
+            	if (t1 != "") {
+            		g.setEntered(Integer.parseInt(t1), getx(), gety());
+            		g.winner();
+            	} else {
+            		g.deleteEntry(Integer.parseInt(value), getx(), gety());
+            	}
             }
         });
 
-        
+
         this.setOnMouseExited(event -> {
         	 if (!combo.isShowing()) {
                  combo.setVisible(false);
@@ -66,7 +71,7 @@ public class WhiteTile extends Tile {
         	 value = combo.getValue();
              label.setText(value);
         });
-        
+
 
 		getChildren().clear();
 		getChildren().addAll(displayed, label, combo);

@@ -69,7 +69,17 @@ public class Row {
 		} else {
 			ArrayList<Integer[]> sums = getValidSums(numTiles-numEnteredValues);
 			validValues.clear();
-			
+
+			// print all permutations if necessary
+			/*
+			for (Integer[] values: sums) {
+				for (int value: values) {
+					System.out.print(value + "\n");
+				}
+				System.out.println();
+			}
+			*/
+
 			for (Integer[] addends: sums) {
 				for (int validValue: addends) {
 					validValues.add(validValue);
@@ -81,81 +91,91 @@ public class Row {
 
 	private ArrayList<Integer[]> getValidSums(int addends) {
 		ArrayList<Integer[]> sums = new ArrayList<Integer[]>();
-		int max = 9;
-		int sum = 0;
-		int pivot = tiles.size()-enteredValues.size()-1;
-		Integer[] values = new Integer[addends];
-		
+		int addendCap = 9;
+		int maxSum = 0;
+		int goal = this.sum - sumEnteredValues();
+
 		for (int x = 0; x < addends; x++) {
+			maxSum += addendCap-x;
+		}
+
+		while (maxSum >= goal) {
+			ArrayList<Integer[]> sumsWithThisMax = getSums(goal, addends, addendCap);
+
+			for (Integer[] array: sumsWithThisMax) {
+				if (!arrayContainsEntry(array)) {
+					sums.add(array.clone());
+				}
+			}
+
+			maxSum = 0;
+			addendCap--;
+			for (int x = 0; x < addends; x++) {
+				maxSum += addendCap-x;
+			}
+		}
+
+		return sums;
+	}
+
+	private ArrayList<Integer[]> getSums(int goal, int addends, int addendCap) {
+		int pivot = addends-1;
+		Integer[] values = new Integer[addends];
+		ArrayList<Integer[]> sums = new ArrayList<Integer[]>();
+		int sum = addends*(addends+1)/2;
+		int max = addendCap;
+
+		for (int x=0; x<addends; x++) {
 			values[x] = x+1;
 		}
 
-		while (true) {
-			for (int value: values) {
-				sum += value;
-			}
-
-			if (sum < this.sum - sumEnteredValues()) {
-				values[pivot] += 1;
-			} else {
-				break;
-			}
-
+		while (sum < goal) {
 			if (values[pivot] == max) {
 				pivot--;
 				max--;
 			}
 
-			sum = 0;
+			values[pivot] += 1;
+			sum++;
 		}
 
 		sums.add(values.clone());
 
-		if (pivot > 0) {
-			while ((values[pivot] - values[pivot-1]) > 2) {
-				values[pivot] -= 1;
-				values[pivot-1] += 1;
+		int gap = findGap(values);
 
-				boolean valid = true;
-				for (int value: values) {
-					if (enteredValues.contains(value)) {
-						valid = false;
-					}
-				}
-				
-				if (valid) {
-					sums.add(values.clone());
-				}
+		if (gap < addends) {
+			while (values[gap+1] - values[gap] > 2) {
+				values[gap] += 1;
+				values[gap+1] -= 1;
+				sums.add(values.clone());
 			}
 		}
-		
-		for (Integer[] valueArray: sums) {
-			for (int value: valueArray) {
-				System.out.print(value + ", ");
-			}
-			System.out.println();
-		}
-		
-		if (pivot == 0) {
-			while ((values[pivot+1] - values[0]) > 2) {
-				values[pivot+1] -= 1;
-				values[0] += 1;
-
-				boolean valid = true;
-				for (int value: values) {
-					if (enteredValues.contains(value)) {
-						valid = false;
-					}
-				}
-				
-				if (valid) {
-					sums.add(values.clone());
-				}
-			}
-		}
-		
 
 		return sums;
+	}
+
+	private int findGap(Integer[] values) {
+		int x=0;
+		while (x < values.length-1) {
+			if (values[x+1] - values[x] > 2) {
+				return x;
+			}
+			x++;
+		}
+
+		x++;
+		return x;
+	}
+
+	private boolean arrayContainsEntry(Integer[] array) {
+
+		for (int i: array) {
+			if (enteredValues.contains(i)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public boolean containsTile(int x, int y) {
@@ -184,6 +204,12 @@ public class Row {
 		}
 
 		return row;
+	}
+
+	public void deleteEntered(int value) {
+		enteredValues.remove((Integer) value);
+		this.calcValidValues();
+
 	}
 
 }
