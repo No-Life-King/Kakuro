@@ -20,8 +20,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			GameBoard gameBoard = new GameBoard();
-			gameBoard.readBoard("board1.txt");
+			GameBoard gameBoard = new GameBoard(primaryStage);
 			Scene scene = new Scene(gameBoard.createContent());
 			scene.getStylesheets().add(Main.class.getResource("Main.css").toExternalForm());
 			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {

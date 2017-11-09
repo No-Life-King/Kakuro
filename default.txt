@@ -1,0 +1,110 @@
+black	empty
+black	empty
+black	empty
+black	empty
+black	empty
+black	empty
+black	empty
+black	empty
+black	empty
+black	empty
+row
+black	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
+black	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
+black	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
+black	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
+black	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
+black	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
+black	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
+black	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row
+black	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+white	empty
+row

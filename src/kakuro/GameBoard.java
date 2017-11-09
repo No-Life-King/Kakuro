@@ -1,35 +1,49 @@
 package kakuro;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-public class GameBoard {
+public class GameBoard implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private transient Stage primaryStage;
 	private Tile[][] tiles;
 	private static final int tileSize = 60;
-	private BorderPane root = new BorderPane();
-	private GridPane appContent = new GridPane();
-	private SidePanel sidePanel;
-	private ArrayList<Row> rows = new ArrayList<Row>();
-	private ArrayList<Column> columns = new ArrayList<Column>();
+	private transient BorderPane root = new BorderPane();
+	private transient GridPane appContent = new GridPane();
+	private transient SidePanel sidePanel;
+	private transient ArrayList<Row> rows = new ArrayList<Row>();
+	private transient ArrayList<Column> columns = new ArrayList<Column>();
 	private int boardSize;
-
+	
+	public GameBoard(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+	}
+	
 	public Parent createContent() {
+		this.openDefault();
 		int boardSize = tiles.length;
 		this.boardSize = boardSize;
 
@@ -119,30 +133,27 @@ public class GameBoard {
 
 		root.setTop(this.generateMenu(root));
 		root.setCenter(appContent);
-		//root.setRight(sidePanel);
 		return root;
 	}
 
 	public MenuBar generateMenu(Pane root) {
 		MenuBar menuBar = new MenuBar();
 
-		Menu fileMenu = new Menu("File");
-		MenuItem openMenuItem = new MenuItem("Open");
-		MenuItem saveMenuItem = new MenuItem("Save");
-		MenuItem exitMenuItem = new MenuItem("Exit");
-		exitMenuItem.setOnAction(actionEvent -> Platform.exit());
-
 		Menu gameMenu = new Menu("Game");
+		MenuItem newMenuItem = new MenuItem("New");
+		MenuItem readMenuItem = new MenuItem("Read");
+		MenuItem saveMenuItem = new MenuItem("Save");
 		MenuItem cheat = new MenuItem("Cheat");
+		MenuItem exitMenuItem = new MenuItem("Exit");
+		
+		readMenuItem.setOnAction(actionEvent -> open());
+		saveMenuItem.setOnAction(actionEvent -> save());
 		cheat.setOnAction(actionEvent -> cheat());
-		gameMenu.getItems().addAll(cheat);
+		exitMenuItem.setOnAction(actionEvent -> Platform.exit());
+		
+		gameMenu.getItems().addAll(newMenuItem, readMenuItem, saveMenuItem, cheat, new SeparatorMenuItem(), exitMenuItem);
 
-
-
-		fileMenu.getItems().addAll(openMenuItem, saveMenuItem,
-				new SeparatorMenuItem(), exitMenuItem);
-
-		menuBar.getMenus().addAll(fileMenu, gameMenu);
+		menuBar.getMenus().addAll(gameMenu);
 
 		return menuBar;
 	}
@@ -198,12 +209,12 @@ public class GameBoard {
 		return intersect;
 	}
 
-	public void readBoard(String filename) {
+	public void readBoard(File file) {
 		String line;
 		ArrayList<Tile> rowTiles = new ArrayList<Tile>();
 
 		try {
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 			int row = 0;
 
 			while((line = bufferedReader.readLine()) != null) {
@@ -243,10 +254,6 @@ public class GameBoard {
 		} catch(IOException ex) {
 			System.out.println("Unable to read file.");
 		}
-	}
-
-	public void saveFile() {
-
 	}
 
 	private Row getRow(int x, int y) {
@@ -293,6 +300,51 @@ public class GameBoard {
 
 		System.out.println(tileRow);
 		System.out.println(tileCol);
+	}
+	
+	public void save() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Save Game");
+		  
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("KAKURO files (*.kakuro)", "*.kakuro");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        File file = fileChooser.showSaveDialog(primaryStage);
+        
+        if(file != null){
+        	try {
+    			FileOutputStream f = new FileOutputStream(file);
+    			ObjectOutputStream o = new ObjectOutputStream(f);
+
+    			o.writeObject(this);
+
+    			o.close();
+    			f.close();
+
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+        }
+	}
+	
+	public void open() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Game");
+		  
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(".TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        File file = fileChooser.showOpenDialog(primaryStage);
+        
+        if(file != null){
+        	this.readBoard(file);
+        	this.createContent();
+        }
+	}
+	
+	private void openDefault() {
+		File file = new File("board1.txt");
+		this.readBoard(file);
 	}
 
 }
