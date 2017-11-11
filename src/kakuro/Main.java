@@ -17,6 +17,9 @@ public class Main extends Application {
 		launch(args);
 	}
 
+	/**
+	 * comment this whole file
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		try {

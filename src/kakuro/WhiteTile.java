@@ -23,7 +23,7 @@ public class WhiteTile extends Tile {
 
 	public WhiteTile(GameBoard gameBoard) {
 		g = gameBoard;
-		setSize(gameBoard.getSize());
+		setSize(gameBoard.getTileSize());
 		Rectangle displayed = new Rectangle(getSize(), getSize());
 		displayed.setFill(Color.WHITE);
 		displayed.setStroke(Color.BLACK);
