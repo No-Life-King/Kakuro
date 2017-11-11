@@ -110,7 +110,7 @@ public class WhiteTile extends Tile {
 
 	@Override
 	public String toString() {
-		return "(" + getx() + ", " + gety() + ")";
+		return "White" + "\t"  + this.getValue();
 	}
 
 }

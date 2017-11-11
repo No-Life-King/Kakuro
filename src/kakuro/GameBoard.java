@@ -1,17 +1,22 @@
 package kakuro;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -28,16 +33,15 @@ import javafx.stage.Stage;
  * @author Bobby Palmer
  *
  */
-public class GameBoard implements Serializable{
+public class GameBoard {
 
-	private static final long serialVersionUID = 1L;
-	private transient Stage primaryStage;
+	private Stage primaryStage;
 	private Tile[][] tiles;
 	private static final int tileSize = 60;
-	private transient BorderPane root = new BorderPane();
-	private transient GridPane appContent = new GridPane();
-	private transient ArrayList<Row> rows = new ArrayList<Row>();
-	private transient ArrayList<Column> columns = new ArrayList<Column>();
+	private BorderPane root = new BorderPane();
+	private GridPane appContent = new GridPane();
+	private ArrayList<Row> rows = new ArrayList<Row>();
+	private ArrayList<Column> columns = new ArrayList<Column>();
 	private int whiteTiles = 0, enteredValues = 0, boardSize;
 
 	/**
@@ -46,6 +50,12 @@ public class GameBoard implements Serializable{
 	 */
 	public GameBoard(Stage primaryStage) {
 		this.primaryStage = primaryStage;
+		this.openDefault();
+	}
+	
+	public GameBoard(Stage primaryStage, File file) {
+		this.primaryStage = primaryStage;
+		this.readBoard(file);
 	}
 
 	/**
@@ -53,7 +63,6 @@ public class GameBoard implements Serializable{
 	 * @return
 	 */
 	public Parent createContent() {
-		this.openDefault();
 		int boardSize = tiles.length;
 		this.boardSize = boardSize;
 
@@ -182,6 +191,7 @@ public class GameBoard implements Serializable{
 		MenuItem exitMenuItem = new MenuItem("Exit");
 
 		// trigger method calls on action
+		newMenuItem.setOnAction(actionEvent -> clearBoard());
 		readMenuItem.setOnAction(actionEvent -> open());
 		saveMenuItem.setOnAction(actionEvent -> save());
 		cheat.setOnAction(actionEvent -> cheat());
@@ -293,7 +303,7 @@ public class GameBoard implements Serializable{
 						tiles = new Tile[columns][columns];
 					}
 
-					for (int j=0; j<columns; j++) {
+					for (int j = 0; j < columns; j++) {
 						tiles[row][j] = rowTiles.get(j);
 					}
 
@@ -303,17 +313,22 @@ public class GameBoard implements Serializable{
 				}
 
 				String[] data = line.split("\t");
-				if(data[0].equals("black")) {
+				if(data[0].equals("Black")) {
 					BlackTile tile = new BlackTile(tileSize);
 
-					if(data[1].equals("full")) {
-						tile.setValues(data[2], data[3]);
-					}
+					tile.setValues(data[1], data[2]);
 
 					rowTiles.add(tile);
 				}
-				else if(data[0].equals("white")) {
-					rowTiles.add(new WhiteTile(this));
+				else if(data[0].equals("White")) {
+					WhiteTile tile = new WhiteTile(this);
+					
+					int value = Integer.parseInt(data[1]);
+					if(value != 0) {
+						tile.setValue(value);
+					}
+					
+					rowTiles.add(tile);
 				}
 
 			}
@@ -409,10 +424,12 @@ public class GameBoard implements Serializable{
 		// if the number of entered values is equal to the number of white tiles,
 		// then the user must have won
 		if (whiteTiles == enteredValues) {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Victory is Yours");
+			alert.setHeaderText("Congratulations, you won the game!");
+			alert.setContentText("Return to game.");
 
-			// stick winning dialog here
-			System.out.println("You Win!");
-			// you can actually just return void
+			alert.showAndWait();
 			return true;
 		}
 
@@ -433,14 +450,19 @@ public class GameBoard implements Serializable{
 
         if(file != null){
         	try {
-    			FileOutputStream f = new FileOutputStream(file);
-    			ObjectOutputStream o = new ObjectOutputStream(f);
-
-    			o.writeObject(this);
-
-    			o.close();
-    			f.close();
-
+        		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+        		
+        		for(int i = 0; i < tiles.length; i++) {
+        			if(i != 0) {
+        				bw.write("row" + "\n");
+        			}
+        			for(int j = 0; j < tiles[i].length; j++) {
+        				bw.write(tiles[i][j].toString() + "\n");
+        			}
+        		}
+        		
+        		bw.write("row");
+        		bw.close();
     		} catch (Exception e) {
     			e.printStackTrace();
     		}
@@ -454,14 +476,30 @@ public class GameBoard implements Serializable{
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Game");
 
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(".TXT files (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("KAKURO files (*.kakuro)", "*.kakuro");
         fileChooser.getExtensionFilters().add(extFilter);
 
         File file = fileChooser.showOpenDialog(primaryStage);
 
         if(file != null){
-        	this.readBoard(file);
-        	this.createContent();
+        	try {
+    			GameBoard gameBoard = new GameBoard(primaryStage, file);
+    			Scene scene = new Scene(gameBoard.createContent());
+    			scene.getStylesheets().add(Main.class.getResource("Main.css").toExternalForm());
+    			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+    				 public void handle(final KeyEvent keyEvent) {
+    				   if (keyEvent.getCode() == KeyCode.SPACE) {
+    				    gameBoard.cheat();
+    				    keyEvent.consume();
+    				   }
+    				 }
+    				});
+    			primaryStage.setScene(scene);
+    			primaryStage.setTitle("Kakuro!");
+    			primaryStage.show();
+    		} catch(Exception e) {
+    			e.printStackTrace();
+    		}
         }
 	}
 
@@ -469,8 +507,12 @@ public class GameBoard implements Serializable{
 	 * comment me
 	 */
 	private void openDefault() {
-		File file = new File("board1.txt");
+		File file = new File("Resources/default.kakuro");
 		this.readBoard(file);
+	}
+	
+	public void clearBoard() {
+		
 	}
 
 }

@@ -10,6 +10,7 @@
 /*** The menu bar itself ***/
 .menu-bar {
     -fx-background-color: -fx-my-menu-color;
+    -fx-padding: 2 2 2 2;
 }
 
 /*** Top-level menu itself (not selected / hovered) ***/

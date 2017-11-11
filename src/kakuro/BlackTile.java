@@ -76,9 +76,11 @@ public class BlackTile extends Tile {
 	 * comment
 	 */
 	private void createText() {
-		Line line = new Line(0, 0, getSize(), getSize());
-		line.setStroke(Color.WHITE);
-		getChildren().addAll(line);
+		if(topRightNum != 0 || bottomLeftNum != 0) {
+			Line line = new Line(0, 0, getSize(), getSize());
+			line.setStroke(Color.WHITE);
+			getChildren().addAll(line);
+		}
 
 		if(topRightNum != 0) {
 			Text tR = new Text(topRight);
@@ -114,7 +116,7 @@ public class BlackTile extends Tile {
 	 */
 	@Override
 	public String toString() {
-		return "Black: " + topRight + " " + bottomLeft;
+		return "Black" + "\t" + bottomLeft + "\t" + topRight;
 	}
 
 }
