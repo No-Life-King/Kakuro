@@ -54,7 +54,7 @@ public class WhiteTile extends Tile {
 
         combo.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
-            	if (t1 != "") {
+            	if (!t1.equals("")) {
             		g.setEntered(Integer.parseInt(t1), getx(), gety());
             		g.winner();
             	} else {
@@ -106,6 +106,19 @@ public class WhiteTile extends Tile {
 		} catch(Exception e) {
 			return 0;
 		}
+	}
+	
+	public void fixLoadedBoard() {
+		if (!value.equals("")) {
+    		g.setEntered(Integer.parseInt(value), getx(), gety());
+    		g.winner();
+		}
+	}
+	
+	public void setEmpty() {
+		label.setText("");
+		this.value = "";
+		combo.setValue("");
 	}
 
 	@Override

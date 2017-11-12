@@ -45,24 +45,48 @@ public class GameBoard {
 	private int whiteTiles = 0, enteredValues = 0, boardSize;
 
 	/**
-	 * comment me
+	 * Constructor generates blank 10x10 board as default application behavior upon opening.
 	 * @param primaryStage
 	 */
 	public GameBoard(Stage primaryStage) {
 		this.primaryStage = primaryStage;
-		this.openDefault();
+		
+		tiles = new Tile[10][10];
+		for(int i = 0; i < tiles.length; i++) {
+			for(int j = 0; j < tiles[i].length; j++) {
+				if(i == 0 || j == 0) {
+					BlackTile tile = new BlackTile(tileSize);
+					tile.setValues("0", "0");
+					tiles[i][j] = tile;
+					tile.setx(i);
+					tile.sety(j);
+					appContent.add(tile, j, i);
+				} else {
+					WhiteTile tile = new WhiteTile(this);
+					tiles[i][j] = tile;
+					tile.setx(i);
+					tile.sety(j);
+					appContent.add(tile, j, i);
+				}
+			}
+		}
+		
+		int boardSize = tiles.length;
+		this.boardSize = boardSize;
+
+		root.setMaxSize(tileSize*(boardSize), tileSize*(boardSize));
+		this.buildRowsColumns();
 	}
 	
+	/**
+	 * Overloaded constructor, allows a game-board of any size to be generated from any valid
+	 * board data file (*.KAKURO).
+	 * @param primaryStage
+	 * @param file
+	 */
 	public GameBoard(Stage primaryStage, File file) {
 		this.primaryStage = primaryStage;
 		this.readBoard(file);
-	}
-
-	/**
-	 * comment me
-	 * @return
-	 */
-	public Parent createContent() {
 		int boardSize = tiles.length;
 		this.boardSize = boardSize;
 
@@ -76,7 +100,32 @@ public class GameBoard {
 				appContent.add(tile, j, i);
 			}
 		}
+		
+		this.buildRowsColumns();
+		
+		for(int i = 0; i < tiles.length; i++) {
+			for(int j = 0; j < tiles[i].length; j++) {
+				if(tiles[i][j].getType().equals("white")) {
+					if(((WhiteTile) tiles[i][j]).getValue() != 0) {
+						((WhiteTile) tiles[i][j]).fixLoadedBoard();
+					}
+				}
+			}
+		}
+	}
 
+	/**
+	 * Collects all the GUI elements and adds them to a single pane which is returned
+	 * to the application master pane in Main class.
+	 * @return root: The pane on which all the game-board objects are instantiated.
+	 */
+	public Parent createContent() {
+		root.setTop(this.generateMenu());
+		root.setCenter(appContent);
+		return root;
+	}
+	
+	private void buildRowsColumns() {
 		int x = 1;
 		int y = 1;
 		int upperBound = (boardSize-1);
@@ -165,10 +214,6 @@ public class GameBoard {
 		for (Row row: rows) {
 			row.calcValidValues();
 		}
-
-		root.setTop(this.generateMenu());
-		root.setCenter(appContent);
-		return root;
 	}
 
 	/**
@@ -285,7 +330,8 @@ public class GameBoard {
 	}
 
 	/**
-	 * comment me
+	 * Reads the data from valid (*.KAKURO) data-files and generates the corresponding
+	 * tile objects for display on the game-board.
 	 * @param file
 	 */
 	public void readBoard(File file) {
@@ -323,9 +369,11 @@ public class GameBoard {
 				else if(data[0].equals("White")) {
 					WhiteTile tile = new WhiteTile(this);
 					
-					int value = Integer.parseInt(data[1]);
-					if(value != 0) {
-						tile.setValue(value);
+					if(!data[1].equals("0")) {
+						int value = Integer.parseInt(data[1]);
+						if(value != 0) {
+							tile.setValue(value);
+						}
 					}
 					
 					rowTiles.add(tile);
@@ -437,7 +485,8 @@ public class GameBoard {
 	}
 
 	/**
-	 * Comment pl0x
+	 * Displays a file-chooser which allows a user to save the current game-board in its present state
+	 * to a valid (*.KAKURO) data file on the user's system.
 	 */
 	public void save() {
 		FileChooser fileChooser = new FileChooser();
@@ -470,7 +519,9 @@ public class GameBoard {
 	}
 
 	/**
-	 * comment me
+	 * Displays a file-chooser from which only valid (*.KAKURO) files may be
+	 * selected to be opened; generates an entirely new Game-board object using
+	 * the valid file constructor, and displays the new Game-board object on the screen.
 	 */
 	public void open() {
 		FileChooser fileChooser = new FileChooser();
@@ -502,17 +553,22 @@ public class GameBoard {
     		}
         }
 	}
-
-	/**
-	 * comment me
-	 */
-	private void openDefault() {
-		File file = new File("Resources/default.kakuro");
-		this.readBoard(file);
-	}
 	
+	/**
+	 * Causes all the entered WhiteTile values to be cleared, and their values in the game-logic
+	 * row/column objects to be deleted.
+	 */
 	public void clearBoard() {
-		
+		for(int i = 0; i < tiles.length; i++) {
+			for(int j = 0; j < tiles[i].length; j++) {
+				if(tiles[i][j].getType().equals("white")) {
+					if(((WhiteTile) tiles[i][j]).getValue() != 0) {
+						this.deleteEntry(((WhiteTile) tiles[i][j]).getValue(), tiles[i][j].getx(), tiles[i][j].gety());
+						((WhiteTile) tiles[i][j]).setEmpty();
+					}
+				}
+			}
+		}
 	}
 
 }
