@@ -64,8 +64,6 @@ public class GameBoard {
 				} else {
 					WhiteTile tile = new WhiteTile(this);
 					tiles[i][j] = tile;
-					tile.setx(i);
-					tile.sety(j);
 					appContent.add(tile, j, i);
 				}
 			}
@@ -95,25 +93,11 @@ public class GameBoard {
 		for (int i = 0; i < boardSize; i++) {
 			for (int j = 0; j < boardSize; j++) {
 				Tile tile = tiles[i][j];
-				tile.setx(i);
-				tile.sety(j);
 				appContent.add(tile, j, i);
 			}
 		}
 
 		this.buildRowsColumns();
-
-		for(int i = 0; i < tiles.length; i++) {
-			for(int j = 0; j < tiles[i].length; j++) {
-				if(tiles[i][j].getType().equals("white")) {
-					if(((WhiteTile) tiles[i][j]).getValue() != 0) {
-						((WhiteTile) tiles[i][j]).fixLoadedBoard();
-					}
-				}
-			}
-		}
-
-		enteredValues /= 2;
 	}
 
 	/**
@@ -262,8 +246,8 @@ public class GameBoard {
 	public void cheat() {
 		System.out.println("spacebar");
 		OUTER:
-		for (int x=0; x<boardSize; x++) {
-			for (int y=0; y<10; y++) {
+		for (int x= 0; x < boardSize; x++) {
+			for (int y = 0; y < 10; y++) {
 
 				// checks if there is only one solution for this tile
 				HashSet<Integer> tileValues = validValues(x, y);
@@ -366,11 +350,17 @@ public class GameBoard {
 					BlackTile tile = new BlackTile(tileSize);
 
 					tile.setValues(data[1], data[2]);
+					
+					tile.setx(row);
+					tile.sety(rowTiles.size());
 
 					rowTiles.add(tile);
 				}
 				else if(data[0].equals("White")) {
 					WhiteTile tile = new WhiteTile(this);
+					
+					tile.setx(row);
+					tile.sety(rowTiles.size());
 
 					if(!data[1].equals("0")) {
 						int value = Integer.parseInt(data[1]);

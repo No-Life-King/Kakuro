@@ -19,7 +19,7 @@ public class WhiteTile extends Tile {
 	private GameBoard g;
 	private Label label = new Label();
 	private ComboBox<String> combo = new ComboBox<>();
-	private String value;
+	private String value = "";
 
 	public WhiteTile(GameBoard gameBoard) {
 		g = gameBoard;
@@ -29,55 +29,63 @@ public class WhiteTile extends Tile {
 		displayed.setStroke(Color.BLACK);
 		setType("white");
 
-		combo.getSelectionModel().select(0);
         combo.setVisible(false);
 
         label.setVisible(true);
         label.setFont(new Font("Times New Roman", 24));
-        value = combo.getValue();
         label.setText(value);
 
         this.setOnMouseEntered(event -> {
         	combo.setVisible(true);
         	this.setComboLabels();
-        	value = combo.getValue();
-            label.setText(value);
         	});
 
         combo.showingProperty().addListener(observable -> {
             if (!combo.isShowing()) {
                 combo.setVisible(false);
             }
-            value = combo.getValue();
-            label.setText(value);
         });
 
         combo.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-            	if (!t1.equals("")) {
-            		g.setEntered(Integer.parseInt(t1), getx(), gety());
-            		g.winner();
-            	} else {
-            		g.deleteEntry(Integer.parseInt(value), getx(), gety());
-            	}
+            @SuppressWarnings("rawtypes")
+			@Override public void changed(ObservableValue ov, String t, String t1) {
+            	
+            	valueChange(combo.getValue());
+
             }
         });
-
 
         this.setOnMouseExited(event -> {
         	 if (!combo.isShowing()) {
                  combo.setVisible(false);
              }
-        	 value = combo.getValue();
-             label.setText(value);
         });
-
 
 		getChildren().clear();
 		getChildren().addAll(displayed, label, combo);
 	}
+	
+	private void valueChange(String newValue) {
+		if(value.equals("") && !newValue.equals("")) {
+			g.setEntered(Integer.parseInt(newValue), getx(), gety());
+    		g.winner();
+		}
+		
+		if(!value.equals("") && newValue.equals("")) {
+			g.deleteEntry(Integer.parseInt(value), getx(), gety());
+		}
+		
+		if(!newValue.equals("") && !value.equals("") && !newValue.equals(value)) {
+			g.deleteEntry(Integer.parseInt(value), getx(), gety());
+			g.setEntered(Integer.parseInt(newValue), getx(), gety());
+    		g.winner();
+		}
+		
+		value = newValue;
+    	label.setText(newValue);
+	}
 
-	private void setComboLabels() {
+	private void setComboLabels() {		
 		HashSet<Integer> validValues = g.validValues(getx(), gety());
 		String[] validEntries = new String[validValues.size()+1];
 		validEntries[0] = "";
@@ -93,32 +101,20 @@ public class WhiteTile extends Tile {
 
 	public void setValue(int value) {
 		String v = ((Integer) value).toString();
-		label.setText(v);
-		this.value = v;
-		combo.setValue(v);
+		this.valueChange(v);
 	}
 
 	public int getValue() {
-		value = combo.getValue();
-		try {
+		if(value.equals("")) {
+			return 0;
+		} else {
 			int numValue = Integer.parseInt(value);
 			return numValue;
-		} catch(Exception e) {
-			return 0;
-		}
-	}
-
-	public void fixLoadedBoard() {
-		if (!value.equals("")) {
-    		g.setEntered(Integer.parseInt(value), getx(), gety());
-    		g.winner();
 		}
 	}
 
 	public void setEmpty() {
-		label.setText("");
-		this.value = "";
-		combo.valueProperty().set(null);
+		this.valueChange("");
 	}
 
 	@Override
