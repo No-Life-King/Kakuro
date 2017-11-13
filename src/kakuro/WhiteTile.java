@@ -20,6 +20,7 @@ public class WhiteTile extends Tile {
 	private Label label = new Label();
 	private ComboBox<String> combo = new ComboBox<>();
 	private String value = "";
+	public String loadBoardValue = "";
 
 	public WhiteTile(GameBoard gameBoard) {
 		g = gameBoard;
@@ -65,7 +66,7 @@ public class WhiteTile extends Tile {
 		getChildren().addAll(displayed, label, combo);
 	}
 	
-	private void valueChange(String newValue) {
+	public void valueChange(String newValue) {
 		if(value.equals("") && !newValue.equals("")) {
 			g.setEntered(Integer.parseInt(newValue), getx(), gety());
     		g.winner();
@@ -83,6 +84,7 @@ public class WhiteTile extends Tile {
 		
 		value = newValue;
     	label.setText(newValue);
+    	combo.getSelectionModel().select(value);
 	}
 
 	private void setComboLabels() {		

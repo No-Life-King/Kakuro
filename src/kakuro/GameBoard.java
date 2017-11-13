@@ -89,15 +89,21 @@ public class GameBoard {
 		this.boardSize = boardSize;
 
 		root.setMaxSize(tileSize*(boardSize), tileSize*(boardSize));
-
+		
+		this.buildRowsColumns();
+		
 		for (int i = 0; i < boardSize; i++) {
 			for (int j = 0; j < boardSize; j++) {
 				Tile tile = tiles[i][j];
+				if(tile.getType().equals("white")) {
+					WhiteTile t = (WhiteTile) tiles[i][j];
+					if(!t.loadBoardValue.equals("")) {
+						t.valueChange(t.loadBoardValue);
+					}
+				}
 				appContent.add(tile, j, i);
 			}
 		}
-
-		this.buildRowsColumns();
 	}
 
 	/**
@@ -241,7 +247,7 @@ public class GameBoard {
 
 	/**
 	 * Fills out the first puzzle box for which there is only one possible solution.
-	 * May be triggered by pressing the spacebar or the cheat button in the menu.
+	 * May be triggered by pressing the space-bar or the cheat button in the menu.
 	 */
 	public void cheat() {
 		System.out.println("spacebar");
@@ -363,10 +369,7 @@ public class GameBoard {
 					tile.sety(rowTiles.size());
 
 					if(!data[1].equals("0")) {
-						int value = Integer.parseInt(data[1]);
-						if(value != 0) {
-							tile.setValue(value);
-						}
+						tile.loadBoardValue = data[1];
 					}
 
 					rowTiles.add(tile);
@@ -559,12 +562,10 @@ public class GameBoard {
 			for(int j = 0; j < tiles[i].length; j++) {
 				if(tiles[i][j].getType().equals("white")) {
 					WhiteTile tile = (WhiteTile) tiles[i][j];
-					deleteEntry(tile.getValue(), i, j);
 					tile.setEmpty();
 				}
 			}
 		}
-		
 		enteredValues = 0;
 	}
 
