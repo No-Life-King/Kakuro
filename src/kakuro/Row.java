@@ -58,6 +58,91 @@ public class Row {
 	}
 
 	public void calcValidValues() {
+
+		int numTiles = tiles.size();
+		int numEnteredValues = enteredValues.size();
+		int addends = numTiles - numEnteredValues;
+
+		if (addends > 0) {
+
+			if (numTiles == numEnteredValues) {
+				validValues.clear();
+			} else if (addends == 1) {
+				validValues.clear();
+				validValues.add(this.sum - sumEnteredValues());
+			} else if (addends == 9) {
+				validValues.clear();
+				validValues.add(1);
+				validValues.add(2);
+				validValues.add(3);
+				validValues.add(4);
+				validValues.add(5);
+				validValues.add(6);
+				validValues.add(7);
+				validValues.add(8);
+				validValues.add(9);
+			} else {
+				validValues.clear();
+
+				Integer[] values = new Integer[addends];
+				int sum = 0;
+				int pivot = addends-1;
+
+				for (int x=0; x<addends; x++) {
+					values[x] = x+1;
+
+				}
+
+				do  {
+					sum = 0;
+
+					for (int x=0; x<addends; x++) {
+						sum += values[x];
+					}
+					if (sum == this.sum - sumEnteredValues() && !arrayContainsEntry(values) && !arrayHasDuplicates(values)) {
+						for (int value: values) {
+							validValues.add(value);
+						}
+
+					}
+
+					if (values[pivot] < 9) {
+						values[pivot] += 1;
+					} else {
+						while (values[pivot] == 9) {
+							values[pivot] = 1;
+							pivot--;
+
+							if (pivot == -1) {
+								pivot++;
+								break;
+							}
+						}
+						values[pivot] += 1;
+						pivot = addends-1;
+					}
+
+				} while (sum < addends*9);
+			}
+		}
+	}
+
+	private boolean arrayHasDuplicates(Integer[] values) {
+		HashSet<Integer> set = new HashSet<Integer>();
+
+		for (int value: values) {
+			set.add(value);
+		}
+
+		if (set.size() == values.length) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/*
+	public void calcValidValues() {
 		int numTiles = tiles.size();
 		int numEnteredValues = enteredValues.size();
 
@@ -71,14 +156,12 @@ public class Row {
 			validValues.clear();
 
 			// print all permutations if necessary
-			/*
 			for (Integer[] values: sums) {
 				for (int value: values) {
 					System.out.print(value + "\n");
 				}
 				System.out.println();
 			}
-			*/
 
 			for (Integer[] addends: sums) {
 				for (int validValue: addends) {
@@ -88,6 +171,7 @@ public class Row {
 		}
 
 	}
+	*/
 
 	private ArrayList<Integer[]> getValidSums(int addends) {
 		ArrayList<Integer[]> sums = new ArrayList<Integer[]>();

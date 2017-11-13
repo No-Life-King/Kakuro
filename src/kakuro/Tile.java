@@ -6,6 +6,10 @@ package kakuro;
 
 import javafx.scene.layout.StackPane;
 
+/**
+ * This abstract class contains the properties and behaviors common
+ * between black tiles and white tiles.
+ */
 public abstract class Tile extends StackPane {
 
 	private String type;
@@ -16,7 +20,7 @@ public abstract class Tile extends StackPane {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	public String getType() {
 		return type;
 	}

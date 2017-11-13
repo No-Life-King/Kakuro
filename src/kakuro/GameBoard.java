@@ -50,7 +50,7 @@ public class GameBoard {
 	 */
 	public GameBoard(Stage primaryStage) {
 		this.primaryStage = primaryStage;
-		
+
 		tiles = new Tile[10][10];
 		for(int i = 0; i < tiles.length; i++) {
 			for(int j = 0; j < tiles[i].length; j++) {
@@ -70,14 +70,14 @@ public class GameBoard {
 				}
 			}
 		}
-		
+
 		int boardSize = tiles.length;
 		this.boardSize = boardSize;
 
 		root.setMaxSize(tileSize*(boardSize), tileSize*(boardSize));
 		this.buildRowsColumns();
 	}
-	
+
 	/**
 	 * Overloaded constructor, allows a game-board of any size to be generated from any valid
 	 * board data file (*.KAKURO).
@@ -100,9 +100,9 @@ public class GameBoard {
 				appContent.add(tile, j, i);
 			}
 		}
-		
+
 		this.buildRowsColumns();
-		
+
 		for(int i = 0; i < tiles.length; i++) {
 			for(int j = 0; j < tiles[i].length; j++) {
 				if(tiles[i][j].getType().equals("white")) {
@@ -112,6 +112,8 @@ public class GameBoard {
 				}
 			}
 		}
+
+		enteredValues /= 2;
 	}
 
 	/**
@@ -124,7 +126,7 @@ public class GameBoard {
 		root.setCenter(appContent);
 		return root;
 	}
-	
+
 	private void buildRowsColumns() {
 		int x = 1;
 		int y = 1;
@@ -258,6 +260,7 @@ public class GameBoard {
 	 * May be triggered by pressing the spacebar or the cheat button in the menu.
 	 */
 	public void cheat() {
+		System.out.println("spacebar");
 		OUTER:
 		for (int x=0; x<boardSize; x++) {
 			for (int y=0; y<10; y++) {
@@ -368,14 +371,14 @@ public class GameBoard {
 				}
 				else if(data[0].equals("White")) {
 					WhiteTile tile = new WhiteTile(this);
-					
+
 					if(!data[1].equals("0")) {
 						int value = Integer.parseInt(data[1]);
 						if(value != 0) {
 							tile.setValue(value);
 						}
 					}
-					
+
 					rowTiles.add(tile);
 				}
 
@@ -386,6 +389,7 @@ public class GameBoard {
 		} catch(IOException ex) {
 			System.out.println("Unable to read file.");
 		}
+
 	}
 
 	/**
@@ -500,7 +504,7 @@ public class GameBoard {
         if(file != null){
         	try {
         		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-        		
+
         		for(int i = 0; i < tiles.length; i++) {
         			if(i != 0) {
         				bw.write("row" + "\n");
@@ -509,7 +513,7 @@ public class GameBoard {
         				bw.write(tiles[i][j].toString() + "\n");
         			}
         		}
-        		
+
         		bw.write("row");
         		bw.close();
     		} catch (Exception e) {
@@ -530,9 +534,11 @@ public class GameBoard {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("KAKURO files (*.kakuro)", "*.kakuro");
         fileChooser.getExtensionFilters().add(extFilter);
 
+        fileChooser.setInitialDirectory(new File("Resources"));
+
         File file = fileChooser.showOpenDialog(primaryStage);
 
-        if(file != null){
+        if (file != null){
         	try {
     			GameBoard gameBoard = new GameBoard(primaryStage, file);
     			Scene scene = new Scene(gameBoard.createContent());
@@ -553,7 +559,7 @@ public class GameBoard {
     		}
         }
 	}
-	
+
 	/**
 	 * Causes all the entered WhiteTile values to be cleared, and their values in the game-logic
 	 * row/column objects to be deleted.
@@ -562,13 +568,14 @@ public class GameBoard {
 		for(int i = 0; i < tiles.length; i++) {
 			for(int j = 0; j < tiles[i].length; j++) {
 				if(tiles[i][j].getType().equals("white")) {
-					if(((WhiteTile) tiles[i][j]).getValue() != 0) {
-						this.deleteEntry(((WhiteTile) tiles[i][j]).getValue(), tiles[i][j].getx(), tiles[i][j].gety());
-						((WhiteTile) tiles[i][j]).setEmpty();
-					}
+					WhiteTile tile = (WhiteTile) tiles[i][j];
+					deleteEntry(tile.getValue(), i, j);
+					tile.setEmpty();
 				}
 			}
 		}
+		
+		enteredValues = 0;
 	}
 
 }

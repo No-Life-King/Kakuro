@@ -107,18 +107,18 @@ public class WhiteTile extends Tile {
 			return 0;
 		}
 	}
-	
+
 	public void fixLoadedBoard() {
 		if (!value.equals("")) {
     		g.setEntered(Integer.parseInt(value), getx(), gety());
     		g.winner();
 		}
 	}
-	
+
 	public void setEmpty() {
 		label.setText("");
 		this.value = "";
-		combo.setValue("");
+		combo.valueProperty().set(null);
 	}
 
 	@Override
