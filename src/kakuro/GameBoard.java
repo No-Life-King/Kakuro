@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -83,6 +84,7 @@ public class GameBoard {
 				appContent.add(tile, j, i);
 			}
 		}
+		appContent.setPadding(new Insets(5, 5, 5, 5));
 	}
 
 	/**
@@ -533,7 +535,7 @@ public class GameBoard {
     				 }
     				});
     			primaryStage.setScene(scene);
-    			primaryStage.setTitle("Kakuro!");
+    			primaryStage.setTitle("Taidana Kakuro");
     			primaryStage.show();
     		} catch(Exception e) {
     			e.printStackTrace();

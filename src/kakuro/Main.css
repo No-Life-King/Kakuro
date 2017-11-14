@@ -1,6 +1,6 @@
 /* VARIABLE DEFINITIONS: Only these 4 variables have to be adjusted, the rest is copy-paste */
 * {
-    -fx-my-menu-color: #000000;                  /* Change according to your needs */
+    -fx-my-menu-color: #44434b;                  /* Change according to your needs */
     -fx-my-menu-color-highlighted: #FFFFFF;      /* Change according to your needs */
     -fx-my-menu-font-color: #FFFFFF;             /* Change according to your needs */
     -fx-my-menu-font-color-highlighted: #000000; /* Change according to your needs */
@@ -10,12 +10,17 @@
 /*** The menu bar itself ***/
 .menu-bar {
     -fx-background-color: -fx-my-menu-color;
-    -fx-padding: 2 2 2 2;
+    -fx-padding: 1 1 1 20;
+    -fx-border-radius: 12 12 12 12;
+  	-fx-background-radius: 12 12 12 12;
 }
 
 /*** Top-level menu itself (not selected / hovered) ***/
 .menu-bar > .container > .menu-button {
     -fx-background-color: -fx-my-menu-color;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 16 px;
+    -fx-font-weight: 300;
 }
 
 /*** Top-level menu's label (not selected / hovered) ***/
@@ -33,6 +38,8 @@
 .menu-bar > .container > .menu-button:focused,
 .menu-bar > .container > .menu-button:showing {
     -fx-background-color: -fx-my-menu-color-highlighted;
+    -fx-border-radius: 12 12 12 12;
+  	-fx-background-radius: 12 12 12 12;
 }
 
 /*** Top-level menu's label (selected / hovered) ***/
@@ -99,9 +106,41 @@
 }
 
 .button:focused {
-    -fx-border-color: transparent, black;
+    -fx-border-color: transparent;
 }
 
 .button:pressed {
-    -fx-background-color: black;
+    -fx-background-color: #323135;
+}
+
+.root {
+    -fx-background-color: #323135;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 16 px;
+    -fx-font-weight: 100;
+}
+
+.landing-button {
+    -fx-background-color: #44434b;
+    -fx-border-radius: 30 30 30 30;
+  	-fx-background-radius: 30 30 30 30;
+  	-fx-border-width: 5 30 5 30;
+}
+
+.landing-button:focused {
+    -fx-background-color: #44434b;
+    -fx-border-radius: 30 30 30 30;
+  	-fx-background-radius: 30 30 30 30;
+  	-fx-border-width: 5 30 5 30;
+}
+
+.landing-button:pressed {
+    -fx-background-color: #44434b;
+    -fx-border-radius: 30 30 30 30;
+  	-fx-background-radius: 30 30 30 30;
+  	-fx-border-width: 5 30 5 30;
+}
+
+.black-rect {
+	-fx-fill: #323135;
 }

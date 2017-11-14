@@ -27,9 +27,9 @@ public class LandingPage {
 	public LandingPage(GameBoard gB) {
 		g = gB;
 		
-		appContent.setStyle("-fx-background-color: Black;");
+		appContent.setStyle("-fx-background-color: #323135;");
 		appContent.setVgap(20);
-		appContent.setPadding(new Insets(30, 75, 40, 75));
+		appContent.setPadding(new Insets(50, 60, 50, 60));
 		
 		// Title Button Generation
 		{
@@ -43,6 +43,7 @@ public class LandingPage {
 		// Random Button Generation / Event Handling
 		{
 			Button button2 = new Button();
+			button2.getStyleClass().add("landing-button");
 			button2.setGraphic(new ImageView(random1));
 			
 			button2.setOnMouseEntered(event -> {
@@ -62,6 +63,7 @@ public class LandingPage {
 		// Load Button Generation / Event Handling
 		{
 			Button button3 = new Button();
+			button3.getStyleClass().add("landing-button");
 			button3.setGraphic(new ImageView(loadGame1));
 			
 			button3.setOnMouseEntered(event -> {
@@ -81,6 +83,7 @@ public class LandingPage {
 		// Exit Button Generation / Event Handling
 		{
 			Button button4 = new Button();
+			button4.getStyleClass().add("landing-button");
 			button4.setGraphic(new ImageView(exit1));
 			
 			button4.setOnMouseEntered(event -> {

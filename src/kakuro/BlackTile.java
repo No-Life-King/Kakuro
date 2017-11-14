@@ -29,7 +29,7 @@ public class BlackTile extends Tile {
 		displayed = new Rectangle(size, size);
 
 		// paint it black
-		displayed.setFill(Color.BLACK);
+		displayed.getStyleClass().add("black-rect");
 
 		// add it to the game board
 		getChildren().addAll(displayed);
@@ -88,9 +88,9 @@ public class BlackTile extends Tile {
 			tR.setTranslateY(-14.00);
 
 			tR.setStyle(
-					"-fx-font-family: \"Times New Roman\";" +
-							"-fx-font-size: 24px;"	+
-							"-fx-fill: rgb(255,255,255);"
+					"-fx-font-family: \"Helvetica\";" +
+							"-fx-font-size: 20px;"	+
+							"-fx-fill: white;"
 					);
 
 			getChildren().addAll(tR);
@@ -102,9 +102,9 @@ public class BlackTile extends Tile {
 			bL.setTranslateY(14.00);
 
 			bL.setStyle(
-					"-fx-font-family: \"Times New Roman\";" +
-							"-fx-font-size: 24px;"	+
-							"-fx-fill: rgb(255,255,255);"
+					"-fx-font-family: \"Helvetica\";" +
+							"-fx-font-size: 20px;"	+
+							"-fx-fill: white;"
 					);
 
 			getChildren().addAll(bL);

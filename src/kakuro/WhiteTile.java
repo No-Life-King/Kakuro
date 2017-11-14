@@ -33,7 +33,7 @@ public class WhiteTile extends Tile {
         combo.setVisible(false);
 
         label.setVisible(true);
-        label.setFont(new Font("Times New Roman", 24));
+        label.setFont(new Font("Helvetica", 22));
         label.setText(value);
 
         this.setOnMouseEntered(event -> {
