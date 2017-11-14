@@ -68,9 +68,9 @@ public class GameBoard {
 		this.boardSize = boardSize;
 
 		root.setMaxSize(tileSize*(boardSize), tileSize*(boardSize));
-		
+
 		this.buildRowsColumns();
-		
+
 		for (int i = 0; i < boardSize; i++) {
 			for (int j = 0; j < boardSize; j++) {
 				Tile tile = tiles[i][j];
@@ -229,7 +229,6 @@ public class GameBoard {
 	 * May be triggered by pressing the space-bar or the cheat button in the menu.
 	 */
 	public void cheat() {
-		System.out.println("spacebar");
 		OUTER:
 		for (int x= 0; x < boardSize; x++) {
 			for (int y = 0; y < 10; y++) {
@@ -335,7 +334,7 @@ public class GameBoard {
 					BlackTile tile = new BlackTile(tileSize);
 
 					tile.setValues(data[1], data[2]);
-					
+
 					tile.setx(row);
 					tile.sety(rowTiles.size());
 
@@ -343,7 +342,7 @@ public class GameBoard {
 				}
 				else if(data[0].equals("White")) {
 					WhiteTile tile = new WhiteTile(this);
-					
+
 					tile.setx(row);
 					tile.sety(rowTiles.size());
 
@@ -471,6 +470,8 @@ public class GameBoard {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("KAKURO files (*.kakuro)", "*.kakuro");
         fileChooser.getExtensionFilters().add(extFilter);
 
+        fileChooser.setInitialDirectory(new File("Resources"));
+
         File file = fileChooser.showSaveDialog(primaryStage);
 
         if(file != null){
@@ -510,7 +511,15 @@ public class GameBoard {
 
         File file = fileChooser.showOpenDialog(primaryStage);
 
-        if (file != null){
+        openBoard(file);
+	}
+
+	/**
+	 * Load a game board from the specified file.
+	 * @param file The file from which to load the board.
+	 */
+	private void openBoard(File file) {
+		if (file != null){
         	try {
     			GameBoard gameBoard = new GameBoard(primaryStage, file);
     			Scene scene = new Scene(gameBoard.createContent());
@@ -537,15 +546,26 @@ public class GameBoard {
 	 * row/column objects to be deleted.
 	 */
 	public void clearBoard() {
-		for(int i = 0; i < tiles.length; i++) {
-			for(int j = 0; j < tiles[i].length; j++) {
-				if(tiles[i][j].getType().equals("white")) {
-					WhiteTile tile = (WhiteTile) tiles[i][j];
-					tile.setEmpty();
+
+		// if "new" is clicked while the landing page is up, load the default game board
+		if (tiles != null) {
+
+			// set all the white tiles to empty, rolling back all changes
+			for(int i = 0; i < tiles.length; i++) {
+				for(int j = 0; j < tiles[i].length; j++) {
+					if(tiles[i][j].getType().equals("white")) {
+						WhiteTile tile = (WhiteTile) tiles[i][j];
+						tile.setEmpty();
+					}
 				}
 			}
+
+			// set the total number of entered values equal to zero so
+			// that the winning condition triggers at the right time
+			enteredValues = 0;
+		} else {
+			openBoard(new File("Resources/g2.kakuro"));
 		}
-		enteredValues = 0;
 	}
 
 }
