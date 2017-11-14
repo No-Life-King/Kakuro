@@ -90,3 +90,18 @@
 	-fx-alignment: center;
 	-fx-font: 18 px;
 }
+
+.button{
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+
+.button:focused {
+    -fx-border-color: transparent, black;
+}
+
+.button:pressed {
+    -fx-background-color: black;
+}

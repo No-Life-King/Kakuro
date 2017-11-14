@@ -51,29 +51,8 @@ public class GameBoard {
 	public GameBoard(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 
-		tiles = new Tile[10][10];
-		for(int i = 0; i < tiles.length; i++) {
-			for(int j = 0; j < tiles[i].length; j++) {
-				if(i == 0 || j == 0) {
-					BlackTile tile = new BlackTile(tileSize);
-					tile.setValues("0", "0");
-					tiles[i][j] = tile;
-					tile.setx(i);
-					tile.sety(j);
-					appContent.add(tile, j, i);
-				} else {
-					WhiteTile tile = new WhiteTile(this);
-					tiles[i][j] = tile;
-					appContent.add(tile, j, i);
-				}
-			}
-		}
-
-		int boardSize = tiles.length;
-		this.boardSize = boardSize;
-
-		root.setMaxSize(tileSize*(boardSize), tileSize*(boardSize));
-		this.buildRowsColumns();
+		LandingPage lp = new LandingPage(this);
+		appContent = lp.getLandingPage();
 	}
 
 	/**
