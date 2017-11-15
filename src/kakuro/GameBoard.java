@@ -126,6 +126,15 @@ public class GameBoard {
 					tile.setx(i);
 					tile.sety(j);
 
+					int k = i-1;
+					while (tiles[k][j].getType().equals("white")) {
+						WhiteTile above = (WhiteTile) tiles[k][j];
+						if (availableValues.indexOf(Integer.parseInt(above.loadBoardValue)) != -1) {
+							availableValues.remove(availableValues.indexOf(Integer.parseInt(above.loadBoardValue)));
+						}
+						k--;
+					}
+
 					int randIndex = (int) (Math.random() * availableValues.size());
 					tile.loadBoardValue = Integer.toString(availableValues.remove(randIndex));
 					appContent.add(tile, j, i);
