@@ -143,4 +143,8 @@
 
 .black-rect {
 	-fx-fill: #323135;
+
+
+	-fx-stroke: white;
+
 }

@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
+
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -85,6 +87,165 @@ public class GameBoard {
 			}
 		}
 		appContent.setPadding(new Insets(5, 5, 5, 5));
+	}
+
+	public GameBoard(Stage primaryStage, int size) {
+		this.boardSize = size;
+		this.primaryStage = primaryStage;
+		this.tiles = new Tile[size][size];
+
+		root.setMaxSize(tileSize*(boardSize), tileSize*(boardSize));
+
+		ArrayList<int[]> randomBlackTiles = generateRandomBlackTiles((int) (Math.pow(boardSize - 1, 2) - Math.pow(boardSize - 2, 2)));
+
+		for (int[] blackTile: randomBlackTiles) {
+			BlackTile tile = new BlackTile(tileSize);
+			tiles[blackTile[0]][blackTile[1]] = tile;
+			appContent.add(tile, blackTile[1], blackTile[0]);
+		}
+
+		LinkedList<Integer> availableValues = new LinkedList<Integer>();
+
+		for (int x=1; x<=9; x++) {
+			availableValues.add(x);
+		}
+
+		for (int i = 0; i < boardSize; i++) {
+			for (int j = 0; j < boardSize; j++) {
+				if (i == 0 || j == 0) {
+					BlackTile tile = new BlackTile(tileSize);
+					tiles[i][j] = tile;
+					appContent.add(tile, j, i);
+					tile.setx(i);
+					tile.sety(j);
+				}
+
+				if (tiles[i][j] == null) {
+					WhiteTile tile = new WhiteTile(this);
+					tiles[i][j] = tile;
+					tile.setx(i);
+					tile.sety(j);
+
+					int randIndex = (int) (Math.random() * availableValues.size());
+					tile.loadBoardValue = Integer.toString(availableValues.remove(randIndex));
+					appContent.add(tile, j, i);
+				} else {
+					availableValues.clear();
+					for (int x=1; x<=9; x++) {
+						availableValues.add(x);
+					}
+				}
+			}
+			availableValues.clear();
+			for (int x=1; x<=9; x++) {
+				availableValues.add(x);
+			}
+		}
+
+		for (int i = 0; i < boardSize; i++) {
+
+			for (int j = 0; j < boardSize; j++) {
+				Tile tile = tiles[i][j];
+
+				if (tile.getType().equals("black")) {
+					int k=j+1;
+					int l=i+1;
+					int rowSum = 0;
+					int columnSum = 0;
+					while (k<boardSize && tiles[i][k].getType().equals("white")) {
+						WhiteTile whitey = (WhiteTile) tiles[i][k];
+						rowSum += Integer.parseInt(whitey.loadBoardValue);
+						k++;
+					}
+
+					while (l<boardSize && tiles[l][j].getType().equals("white")) {
+						WhiteTile whitey = (WhiteTile) tiles[l][j];
+						columnSum += Integer.parseInt(whitey.loadBoardValue);
+						l++;
+					}
+
+					BlackTile blackie = (BlackTile) tile;
+					if (rowSum == 0) {
+						blackie.setTop(0);
+					} else {
+						blackie.setTop(rowSum);
+					}
+
+					if (columnSum == 0) {
+						blackie.setBottom(0);
+					} else {
+						blackie.setBottom(columnSum);
+					}
+				}
+			}
+		}
+
+		this.buildRowsColumns();
+		appContent.setPadding(new Insets(5, 5, 5, 5));
+	}
+
+	private ArrayList<int[]> generateRandomBlackTiles(int i) {
+		ArrayList<int[]> coords = new ArrayList<int[]>();
+
+		while (coords.size() < i) {
+			int[] tileCoords = new int[2];
+
+			for (int a=1; a<boardSize; a++) {
+				int b = 0;
+				while (b == 0) {
+					b = (int) (Math.random() * boardSize);
+				}
+
+				tileCoords[0] = a;
+				tileCoords[1] = b;
+
+				boolean valid = validateGeneratedTile(tileCoords, coords);
+
+				if (valid) {
+					coords.add(tileCoords.clone());
+				}
+			}
+
+			for (int c=1; c<boardSize; c++) {
+				int d = 0;
+				while (d == 0) {
+					d = (int) (Math.random() * boardSize);
+				}
+
+				tileCoords[0] = d;
+				tileCoords[1] = c;
+
+				boolean valid = validateGeneratedTile(tileCoords, coords);
+				if (valid) {
+					coords.add(tileCoords.clone());
+				}
+			}
+		}
+
+		return coords;
+	}
+
+	private boolean validateGeneratedTile(int[] tileCoords, ArrayList<int[]> coords) {
+		if (coords.size() == 0) {
+			return true;
+		}
+
+		boolean valid = true;
+
+		for (int y=0; y<coords.size(); y++) {
+			int xCoord = coords.get(y)[0];
+			int yCoord = coords.get(y)[1];
+			if (tileCoords[0] == xCoord && tileCoords[1] == yCoord) {
+				valid = false;
+				break;
+			} else if ((tileCoords[0] == coords.get(y)[0] && Math.abs(tileCoords[1] - coords.get(y)[1]) == 2)
+					|| (tileCoords[1] == coords.get(y)[1] && Math.abs(tileCoords[0] - coords.get(y)[0]) == 2)) {
+				valid = false;
+				break;
+			}
+		}
+
+		return valid;
 	}
 
 	/**
@@ -208,11 +369,21 @@ public class GameBoard {
 		MenuItem cheat = new MenuItem("Cheat");
 		MenuItem exitMenuItem = new MenuItem("Exit");
 
+		Menu boardMenu = new Menu("New Board");
+
+		MenuItem six = new MenuItem("6x6");
+		MenuItem eight = new MenuItem("8x8");
+		MenuItem ten = new MenuItem("10x10");
+
 		// trigger method calls on action
 		newMenuItem.setOnAction(actionEvent -> clearBoard());
 		readMenuItem.setOnAction(actionEvent -> open());
 		saveMenuItem.setOnAction(actionEvent -> save());
 		cheat.setOnAction(actionEvent -> cheat());
+
+		six.setOnAction(actionEvent -> generateRandomBoard(6));
+		eight.setOnAction(actionEvent -> generateRandomBoard(8));
+		ten.setOnAction(actionEvent -> generateRandomBoard(10));
 
 		// if the exit button is clicked, exit the process immediately
 		exitMenuItem.setOnAction(actionEvent -> Platform.exit());
@@ -220,8 +391,10 @@ public class GameBoard {
 		// add all the menu buttons to the menu
 		gameMenu.getItems().addAll(newMenuItem, readMenuItem, saveMenuItem, cheat, new SeparatorMenuItem(), exitMenuItem);
 
+		boardMenu.getItems().addAll(six, eight, ten);
+
 		// add the menu to the menu bar
-		menuBar.getMenus().addAll(gameMenu);
+		menuBar.getMenus().addAll(gameMenu, boardMenu);
 
 		return menuBar;
 	}
@@ -514,6 +687,27 @@ public class GameBoard {
         File file = fileChooser.showOpenDialog(primaryStage);
 
         openBoard(file);
+	}
+
+	public void generateRandomBoard(int size) {
+		try {
+			GameBoard gameBoard = new GameBoard(primaryStage, size);
+			Scene scene = new Scene(gameBoard.createContent());
+			scene.getStylesheets().add(Main.class.getResource("Main.css").toExternalForm());
+			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+				 public void handle(final KeyEvent keyEvent) {
+				   if (keyEvent.getCode() == KeyCode.SPACE) {
+				    gameBoard.cheat();
+				    keyEvent.consume();
+				   }
+				 }
+				});
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("Taidana Kakuro");
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

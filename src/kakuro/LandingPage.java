@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 public class LandingPage {
-	
+
 	private GameBoard g;
 	private GridPane appContent = new GridPane();
 	Image title = new Image("File:Resources/img/title.png");
@@ -26,11 +26,11 @@ public class LandingPage {
 	 */
 	public LandingPage(GameBoard gB) {
 		g = gB;
-		
+
 		appContent.setStyle("-fx-background-color: #323135;");
 		appContent.setVgap(20);
 		appContent.setPadding(new Insets(50, 60, 50, 60));
-		
+
 		// Title Button Generation
 		{
 			Button button1 = new Button();
@@ -39,33 +39,35 @@ public class LandingPage {
 			GridPane.setHalignment(button1, HPos.CENTER);
 			GridPane.setMargin(button1, new Insets(0, 0, 30, 0));
 		}
-		
+
 		// Random Button Generation / Event Handling
 		{
 			Button button2 = new Button();
 			button2.getStyleClass().add("landing-button");
 			button2.setGraphic(new ImageView(random1));
-			
+
 			button2.setOnMouseEntered(event -> {
 					button2.setGraphic(new ImageView(random2));
 	        	});
-			
+
 			button2.setOnMouseExited(event -> {
 				button2.setGraphic(new ImageView(random1));
 	    	});
-			
-			button2.setOnMouseClicked(event ->{});
-			
+
+			int[] sizes = {6, 8, 10};
+			int randomBoardSize = sizes[(int) (Math.random() * 3)];
+			button2.setOnMouseClicked(event -> g.generateRandomBoard(randomBoardSize));
+
 			appContent.add(button2, 0, 1);
 			GridPane.setHalignment(button2, HPos.CENTER);
 		}
-		
+
 		// Load Button Generation / Event Handling
 		{
 			Button button3 = new Button();
 			button3.getStyleClass().add("landing-button");
 			button3.setGraphic(new ImageView(loadGame1));
-			
+
 			button3.setOnMouseEntered(event -> {
 				button3.setGraphic(new ImageView(loadGame2));
 			});
@@ -73,19 +75,19 @@ public class LandingPage {
 			button3.setOnMouseExited(event -> {
 				button3.setGraphic(new ImageView(loadGame1));
 			});
-			
+
 			button3.setOnMouseClicked(event -> g.open());
-		
+
 			appContent.add(button3, 0, 2);
 			GridPane.setHalignment(button3, HPos.CENTER);
 		}
-		
+
 		// Exit Button Generation / Event Handling
 		{
 			Button button4 = new Button();
 			button4.getStyleClass().add("landing-button");
 			button4.setGraphic(new ImageView(exit1));
-			
+
 			button4.setOnMouseEntered(event -> {
 				button4.setGraphic(new ImageView(exit2));
 			});
@@ -93,14 +95,14 @@ public class LandingPage {
 			button4.setOnMouseExited(event -> {
 				button4.setGraphic(new ImageView(exit1));
 			});
-			
+
 			button4.setOnMouseClicked(event -> Platform.exit());
-			
+
 			appContent.add(button4, 0, 3);
 			GridPane.setHalignment(button4, HPos.CENTER);
 		}
 	}
-	
+
 	/**
 	 * @return: Returns the landing page as a GUI object to be placed on Screen.
 	 */

@@ -56,6 +56,20 @@ public class BlackTile extends Tile {
 		this.createText();
 	}
 
+	public void setTop(int value) {
+		topRight = ((Integer) value).toString();
+		topRightNum = value;
+
+		this.createText();
+	}
+
+	public void setBottom(int value) {
+		bottomLeft = ((Integer) value).toString();
+		bottomLeftNum = value;
+
+		this.createText();
+	}
+
 	/**
 	 * Retrieve the row sum value.
 	 * @return The value in the top right corner of this tile.
