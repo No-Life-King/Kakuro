@@ -84,7 +84,6 @@ public class WhiteTile extends Tile {
 		
 		value = newValue;
     	label.setText(newValue);
-    	combo.getSelectionModel().select(value);
 	}
 
 	private void setComboLabels() {		

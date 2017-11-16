@@ -53,6 +53,8 @@
 /*** The item itself (not hovered / focused) ***/
 .menu-item {
     -fx-background-color: -fx-my-menu-color;
+    -fx-pref-width: 80;
+    -fx-min-width: 60;
 }
 
 /*** The item's label (not hovered / focused) ***/
@@ -82,7 +84,7 @@
 }
 
 .combo-box-base {
-    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, white;
+    -fx-background-color: transparent;
     -fx-background-insets: 0 0 -1 0, 0, 1, 2;
     -fx-background-radius: 3px, 3px, 2px, 1px;
     -fx-pref-width: 60;
@@ -110,7 +112,7 @@
 }
 
 .button:pressed {
-    -fx-background-color: #323135;
+    -fx-background-color: transparent;
 }
 
 .root {
@@ -118,24 +120,26 @@
     -fx-font-family: "Helvetica";
     -fx-font-size: 16 px;
     -fx-font-weight: 100;
+    -fx-accent: #44434b;
+    -fx-focus-color: #44434b;
 }
 
 .landing-button {
-    -fx-background-color: #44434b;
+    -fx-background-color: transparent;
     -fx-border-radius: 30 30 30 30;
   	-fx-background-radius: 30 30 30 30;
-  	-fx-border-width: 5 30 5 30;
+  	-fx-border-width: 5 5 5 5;
 }
 
 .landing-button:focused {
-    -fx-background-color: #44434b;
+    -fx-background-color: transparent;
     -fx-border-radius: 30 30 30 30;
   	-fx-background-radius: 30 30 30 30;
-  	-fx-border-width: 5 30 5 30;
+  	-fx-border-width: 5 5 5 5;
 }
 
 .landing-button:pressed {
-    -fx-background-color: #44434b;
+    -fx-background-color: transparent;
     -fx-border-radius: 30 30 30 30;
   	-fx-background-radius: 30 30 30 30;
   	-fx-border-width: 5 30 5 30;
@@ -143,8 +147,6 @@
 
 .black-rect {
 	-fx-fill: #323135;
-
-
 	-fx-stroke: white;
 
 }

@@ -6,6 +6,11 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 
 public class LandingPage {
@@ -26,10 +31,15 @@ public class LandingPage {
 	 */
 	public LandingPage(GameBoard gB) {
 		g = gB;
+		
+		BackgroundImage bI = new BackgroundImage(new Image("File:Resources/img/background.png"), BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+		          
+		//Sets background to image.
+		appContent.setBackground(new Background(bI));
 
-		appContent.setStyle("-fx-background-color: #323135;");
-		appContent.setVgap(20);
-		appContent.setPadding(new Insets(50, 60, 50, 60));
+		appContent.setVgap(5);
+		appContent.setPadding(new Insets(5, 10, 5, 10));
 
 		// Title Button Generation
 		{
@@ -37,7 +47,7 @@ public class LandingPage {
 			button1.setGraphic(new ImageView(title));
 			appContent.add(button1, 0, 0);
 			GridPane.setHalignment(button1, HPos.CENTER);
-			GridPane.setMargin(button1, new Insets(0, 0, 30, 0));
+			GridPane.setMargin(button1, new Insets(0, 0, 10, 0));
 		}
 
 		// Random Button Generation / Event Handling
