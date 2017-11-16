@@ -58,7 +58,7 @@ public class GameBoard {
 	}
 
 	/**
-	 * Overloaded constructor, allows a game-board of any size to be generated from any valid
+	 * Overloaded constructor, allows a game-board of any size to be loaded from any valid
 	 * board data file (*.KAKURO).
 	 * @param primaryStage
 	 * @param file
@@ -88,6 +88,11 @@ public class GameBoard {
 		appContent.setPadding(new Insets(5, 5, 5, 5));
 	}
 
+	/**
+	 * This constructor randomly generates a new size x size board.
+	 * @param primaryStage The primary stage to which the board should be drawn.
+	 * @param size The width and length of the puzzle in terms of puzzle squares.
+	 */
 	public GameBoard(Stage primaryStage, int size) {
 		this.boardSize = size;
 		this.primaryStage = primaryStage;
@@ -95,8 +100,11 @@ public class GameBoard {
 
 		root.setMaxSize(tileSize*(boardSize), tileSize*(boardSize));
 
+		// generate the coordinates for randomly placed black tiles, keeping a few rules in mind
+		// the number to generate starts at (n-1)^2 - (n-2)^2 where n is the board size in tiles
 		ArrayList<int[]> randomBlackTiles = generateRandomBlackTiles((int) (Math.pow(boardSize - 1, 2) - Math.pow(boardSize - 2, 2)));
 
+		// place the randomly generated black tiles on the board
 		for (int[] blackTile: randomBlackTiles) {
 			BlackTile tile = new BlackTile(tileSize);
 			tiles[blackTile[0]][blackTile[1]] = tile;
@@ -105,12 +113,16 @@ public class GameBoard {
 
 		LinkedList<Integer> availableValues = new LinkedList<Integer>();
 
+		// add 1-9 to the available values
 		for (int x=1; x<=9; x++) {
 			availableValues.add(x);
 		}
 
+		// place the rest of the tiles on the game board
 		for (int i = 0; i < boardSize; i++) {
 			for (int j = 0; j < boardSize; j++) {
+
+				// row 1 and column 1 should all be black tiles
 				if (i == 0 || j == 0) {
 					BlackTile tile = new BlackTile(tileSize);
 					tiles[i][j] = tile;
@@ -119,12 +131,14 @@ public class GameBoard {
 					tile.sety(j);
 				}
 
+				// if a space isn't set yet, put a white tile there
 				if (tiles[i][j] == null) {
 					WhiteTile tile = new WhiteTile(this);
 					tiles[i][j] = tile;
 					tile.setx(i);
 					tile.sety(j);
 
+					// eliminate values that are already used from the available values
 					int k = i-1;
 					while (tiles[k][j].getType().equals("white")) {
 						WhiteTile above = (WhiteTile) tiles[k][j];
@@ -134,22 +148,34 @@ public class GameBoard {
 						k--;
 					}
 
-					int randIndex = (int) (Math.random() * availableValues.size());
-					tile.loadBoardValue = Integer.toString(availableValues.remove(randIndex));
-					appContent.add(tile, j, i);
+					// if all values are assigned, the max row size has been reached and a black tile should be placed
+					if (availableValues.size() > 0) {
+						int randIndex = (int) (Math.random() * availableValues.size());
+						tile.loadBoardValue = Integer.toString(availableValues.remove(randIndex));
+						appContent.add(tile, j, i);
+					} else {
+						BlackTile blackie = new BlackTile(tileSize);
+						tiles[i][j] = blackie;
+						blackie.setx(i);
+						blackie.sety(j);
+						for (int x=1; x<=9; x++) {
+							availableValues.add(x);
+						}
+						appContent.add(blackie, j, i);
+					}
+
 				} else {
+
+					// if a black tile is reached, the row is finished so all the values become available again
 					availableValues.clear();
 					for (int x=1; x<=9; x++) {
 						availableValues.add(x);
 					}
 				}
 			}
-			availableValues.clear();
-			for (int x=1; x<=9; x++) {
-				availableValues.add(x);
-			}
 		}
 
+		// set the row and column sums on the black tiles
 		for (int i = 0; i < boardSize; i++) {
 
 			for (int j = 0; j < boardSize; j++) {
@@ -160,12 +186,15 @@ public class GameBoard {
 					int l=i+1;
 					int rowSum = 0;
 					int columnSum = 0;
+
+					// get the row sum
 					while (k<boardSize && tiles[i][k].getType().equals("white")) {
 						WhiteTile whitey = (WhiteTile) tiles[i][k];
 						rowSum += Integer.parseInt(whitey.loadBoardValue);
 						k++;
 					}
 
+					// get the column sum
 					while (l<boardSize && tiles[l][j].getType().equals("white")) {
 						WhiteTile whitey = (WhiteTile) tiles[l][j];
 						columnSum += Integer.parseInt(whitey.loadBoardValue);
@@ -188,16 +217,23 @@ public class GameBoard {
 			}
 		}
 
+		// build the row and column objects and calculate all the valid values
 		this.buildRowsColumns();
 		appContent.setPadding(new Insets(5, 5, 5, 5));
 	}
 
+	/**
+	 * Randomly generates black tiles to be placed on a random board.
+	 * @param i The number of black tiles to generate.
+	 * @return An ArrayList of black tile coordinates.
+	 */
 	private ArrayList<int[]> generateRandomBlackTiles(int i) {
 		ArrayList<int[]> coords = new ArrayList<int[]>();
 
 		while (coords.size() < i) {
 			int[] tileCoords = new int[2];
 
+			// generate a black tile for each row
 			for (int a=1; a<boardSize; a++) {
 				int b = 0;
 				while (b == 0) {
@@ -214,6 +250,7 @@ public class GameBoard {
 				}
 			}
 
+			// generate a black tile for each column
 			for (int c=1; c<boardSize; c++) {
 				int d = 0;
 				while (d == 0) {
@@ -233,6 +270,12 @@ public class GameBoard {
 		return coords;
 	}
 
+	/**
+	 * Checks to see if a randomly generated black tile has been placed in an appropriate position.
+	 * @param tileCoords The coordinates of the black tile.
+	 * @param coords The rest of the black tiles that have already been generated for a random board.
+	 * @return True if ok. Otherwise, false.
+	 */
 	private boolean validateGeneratedTile(int[] tileCoords, ArrayList<int[]> coords) {
 		if (coords.size() == 0) {
 			return true;
@@ -240,12 +283,17 @@ public class GameBoard {
 
 		boolean valid = true;
 
+		// compare against all placed black tiles
 		for (int y=0; y<coords.size(); y++) {
 			int xCoord = coords.get(y)[0];
 			int yCoord = coords.get(y)[1];
+
+			// if this position has already been taken, don't add it to the list again
 			if (tileCoords[0] == xCoord && tileCoords[1] == yCoord) {
 				valid = false;
 				break;
+
+			// if this black tile is only 1 white space away from another black tile, don't add it to the board
 			} else if ((tileCoords[0] == coords.get(y)[0] && Math.abs(tileCoords[1] - coords.get(y)[1]) == 2)
 					|| (tileCoords[1] == coords.get(y)[1] && Math.abs(tileCoords[0] - coords.get(y)[0]) == 2)) {
 				valid = false;
@@ -267,6 +315,10 @@ public class GameBoard {
 		return root;
 	}
 
+	/**
+	 * Builds all of the row and column objects for any given game board and calculates all of the
+	 * possible starting values for that board.
+	 */
 	private void buildRowsColumns() {
 		int x = 1;
 		int y = 1;
@@ -377,6 +429,8 @@ public class GameBoard {
 		MenuItem cheat = new MenuItem("Cheat");
 		MenuItem exitMenuItem = new MenuItem("Exit");
 
+		// add a menu for randomly creating a new board of size
+		// 6x6, 8x8, or 10x10
 		Menu boardMenu = new Menu("New Board");
 
 		MenuItem six = new MenuItem("6x6");
@@ -389,6 +443,7 @@ public class GameBoard {
 		saveMenuItem.setOnAction(actionEvent -> save());
 		cheat.setOnAction(actionEvent -> cheat());
 
+		// generate the new board
 		six.setOnAction(actionEvent -> generateRandomBoard(6));
 		eight.setOnAction(actionEvent -> generateRandomBoard(8));
 		ten.setOnAction(actionEvent -> generateRandomBoard(10));
@@ -697,6 +752,10 @@ public class GameBoard {
         openBoard(file);
 	}
 
+	/**
+	 * Randomly generate a new board of that has size x size puzzle squares.
+	 * @param size The width and height of the puzzle in terms of puzzle squares.
+	 */
 	public void generateRandomBoard(int size) {
 		try {
 			GameBoard gameBoard = new GameBoard(primaryStage, size);

@@ -56,6 +56,10 @@ public class BlackTile extends Tile {
 		this.createText();
 	}
 
+	/**
+	 * Set the row sum for this black tile.
+	 * @param value The value that the white tile values in the row should sum to.
+	 */
 	public void setTop(int value) {
 		topRight = ((Integer) value).toString();
 		topRightNum = value;
@@ -63,6 +67,10 @@ public class BlackTile extends Tile {
 		this.createText();
 	}
 
+	/**
+	 * Set the column sum for this black tile.
+	 * @param value The value that the white tile values in the column should sum to.
+	 */
 	public void setBottom(int value) {
 		bottomLeft = ((Integer) value).toString();
 		bottomLeftNum = value;
@@ -87,7 +95,7 @@ public class BlackTile extends Tile {
 	}
 
 	/**
-	 * comment
+	 * Styles and positions the numbers correctly on the black tile.
 	 */
 	private void createText() {
 		if(topRightNum != 0 || bottomLeftNum != 0) {
