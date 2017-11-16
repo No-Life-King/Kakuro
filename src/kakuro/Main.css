@@ -1,3 +1,7 @@
+/*** Bobby Palmer
+ * 	 Phil Smith
+ ***/
+
 /* VARIABLE DEFINITIONS: Only these 4 variables have to be adjusted, the rest is copy-paste */
 * {
     -fx-my-menu-color: #44434b;                  /* Change according to your needs */
@@ -83,6 +87,7 @@
     -fx-background-color: -fx-my-menu-color;
 }
 
+/*** Sets basic characteristics combo-box ***/
 .combo-box-base {
     -fx-background-color: transparent;
     -fx-background-insets: 0 0 -1 0, 0, 1, 2;
@@ -91,15 +96,18 @@
     -fx-pref-height: 60;
 }
 
+/*** Makes stupid arrow invisible ***/
 .combo-box .arrow, .combo-box .arrow-button {
     -fx-background-color: transparent;
 }
 
+/*** Cell properties inside combo-box ***/
 .combo-box .list-cell {
 	-fx-alignment: center;
 	-fx-font: 18 px;
 }
 
+/*** Used for title picture button ***/
 .button{
     -fx-border-color: transparent;
     -fx-border-width: 0;
@@ -107,14 +115,17 @@
     -fx-background-color: transparent;
 }
 
+/*** Used for title picture button ***/
 .button:focused {
     -fx-border-color: transparent;
 }
 
+/*** Used for title picture button ***/
 .button:pressed {
     -fx-background-color: transparent;
 }
 
+/*** Sets basic parameters in case everything gets jacked somehow. ***/
 .root {
     -fx-background-color: #323135;
     -fx-font-family: "Helvetica";
@@ -124,6 +135,7 @@
     -fx-focus-color: #44434b;
 }
 
+/*** Used for clickable buttons ***/
 .landing-button {
     -fx-background-color: transparent;
     -fx-border-radius: 30 30 30 30;
@@ -131,6 +143,7 @@
   	-fx-border-width: 5 5 5 5;
 }
 
+/*** Used for clickable buttons ***/
 .landing-button:focused {
     -fx-background-color: transparent;
     -fx-border-radius: 30 30 30 30;
@@ -138,6 +151,7 @@
   	-fx-border-width: 5 5 5 5;
 }
 
+/*** Used for clickable buttons ***/
 .landing-button:pressed {
     -fx-background-color: transparent;
     -fx-border-radius: 30 30 30 30;
@@ -145,6 +159,7 @@
   	-fx-border-width: 5 30 5 30;
 }
 
+/*** Used for black-tiles ***/
 .black-rect {
 	-fx-fill: #323135;
 	-fx-stroke: white;

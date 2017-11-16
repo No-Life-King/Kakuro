@@ -65,19 +65,26 @@ public class GameBoard {
 	 */
 	public GameBoard(Stage primaryStage, File file) {
 		this.primaryStage = primaryStage;
+		
+		// Reads board, gets size calculations.
 		this.readBoard(file);
 		int boardSize = tiles.length;
 		this.boardSize = boardSize;
-
+		
+		// Limits window size to board size.
 		root.setMaxSize(tileSize*(boardSize), tileSize*(boardSize));
-
+		
+		// COnstructs the allowed value calculation objects.
 		this.buildRowsColumns();
-
+		
+		// Gets tile objects displayed in the window.
 		for (int i = 0; i < boardSize; i++) {
 			for (int j = 0; j < boardSize; j++) {
 				Tile tile = tiles[i][j];
 				if(tile.getType().equals("white")) {
 					WhiteTile t = (WhiteTile) tiles[i][j];
+					
+					// Deals with white tiles with stored value information.
 					if(!t.loadBoardValue.equals("")) {
 						t.valueChange(t.loadBoardValue);
 					}
@@ -85,6 +92,7 @@ public class GameBoard {
 				appContent.add(tile, j, i);
 			}
 		}
+		// Gives some padding to board for esthetics.
 		appContent.setPadding(new Insets(5, 5, 5, 5));
 	}
 
@@ -173,6 +181,8 @@ public class GameBoard {
 					}
 				}
 			}
+			// Gives some padding to board for esthetics.
+			appContent.setPadding(new Insets(5, 5, 5, 5));
 		}
 
 		// set the row and column sums on the black tiles
@@ -552,6 +562,9 @@ public class GameBoard {
 			int row = 0;
 
 			while((line = bufferedReader.readLine()) != null) {
+				
+				// Generates temporary array-lists as board data is of unknown size at this point.
+				// These are populated with data and then added to the tiles array, which now has an initialization size.
 				if (line.startsWith("row")) {
 					int columns = rowTiles.size();
 					if (row == 0) {
@@ -566,21 +579,27 @@ public class GameBoard {
 					rowTiles = new ArrayList<Tile>();
 					continue;
 				}
-
+				// Data in file arranged with tabs. Data is split along tab.
 				String[] data = line.split("\t");
+				
+				// Deals with black tile data.
 				if(data[0].equals("Black")) {
 					BlackTile tile = new BlackTile(tileSize);
 
 					tile.setValues(data[1], data[2]);
-
+					
+					// Gives tiles information for allowed value calculation in future.
 					tile.setx(row);
 					tile.sety(rowTiles.size());
 
 					rowTiles.add(tile);
 				}
+				
+				// Deals with white tile data.
 				else if(data[0].equals("White")) {
 					WhiteTile tile = new WhiteTile(this);
-
+					
+					// Gives tiles information for allowed value calculation in future.
 					tile.setx(row);
 					tile.sety(rowTiles.size());
 
@@ -685,6 +704,8 @@ public class GameBoard {
 		// if the number of entered values is equal to the number of white tiles,
 		// then the user must have won
 		if (whiteTiles == enteredValues) {
+			
+			// An alert box is generated and shown when user wins game.
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Victory is Yours");
 			alert.setHeaderText("Congratulations, you won the game!");
@@ -702,20 +723,25 @@ public class GameBoard {
 	 * to a valid (*.KAKURO) data file on the user's system.
 	 */
 	public void save() {
+		// Generates file-chooser and header.
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save Game");
-
+		
+		// Filters allowed extensions.
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("KAKURO files (*.kakuro)", "*.kakuro");
         fileChooser.getExtensionFilters().add(extFilter);
-
+        
+        // Gives pointer to resource folder as default.
         fileChooser.setInitialDirectory(new File("Resources"));
-
+        
+        // Gets the file from file chooser.
         File file = fileChooser.showSaveDialog(primaryStage);
 
         if(file != null){
         	try {
         		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-
+        		
+        		// Writes the data from tile objects to data file.
         		for(int i = 0; i < tiles.length; i++) {
         			if(i != 0) {
         				bw.write("row" + "\n");
@@ -739,14 +765,18 @@ public class GameBoard {
 	 * the valid file constructor, and displays the new Game-board object on the screen.
 	 */
 	public void open() {
+		// Generates file-chooser and header.
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Game");
-
+		
+		// Filters allowed extensions.
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("KAKURO files (*.kakuro)", "*.kakuro");
         fileChooser.getExtensionFilters().add(extFilter);
-
+        
+        // Gives pointer to resource folder as default.
         fileChooser.setInitialDirectory(new File("Resources"));
-
+        
+        // Gets the file from file chooser.
         File file = fileChooser.showOpenDialog(primaryStage);
 
         openBoard(file);

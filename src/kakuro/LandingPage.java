@@ -1,3 +1,8 @@
+/**
+ * @author Bobby Palmer
+ * @author Phil Smith
+ */
+
 package kakuro;
 
 import javafx.application.Platform;
@@ -13,6 +18,10 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 
+/**
+ * Class generates a landing page object, which is generated and displayed
+ * by the game-board in its main content space.
+ */
 public class LandingPage {
 
 	private GameBoard g;
@@ -32,6 +41,7 @@ public class LandingPage {
 	public LandingPage(GameBoard gB) {
 		g = gB;
 		
+		// Gets background picture.
 		BackgroundImage bI = new BackgroundImage(new Image("File:Resources/img/background.png"), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		          
@@ -39,7 +49,7 @@ public class LandingPage {
 		appContent.setBackground(new Background(bI));
 
 		appContent.setVgap(5);
-		appContent.setPadding(new Insets(5, 10, 5, 10));
+		appContent.setPadding(new Insets(5, 15, 5, 15));
 
 		// Title Button Generation
 		{
