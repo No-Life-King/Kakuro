@@ -1,9 +1,9 @@
 # Kakuro
-This project was completed by Phil Smith and Bobby Palmer during the fall 2017 semester for <i>CSC 331 - Object Oriented Programming and Design</i> at UNCW. The project requirements were fairly simple. Our professor uploaded a picture of the "Conceptis Kakuro" puzzle game from a news paper and told us to write a program that only allows a user to enter valid values into each of its puzzle squares. Apart from that, it simply had to be able to read a puzzle of arbitrary size from a file, save an incomplete puzzle back to a file, clear the puzzle board, and implement one extra feature of our own choosing. 
+This project was completed by Phil Smith and Bobby Palmer during the fall 2017 semester for <i>CSC 331 - Object Oriented Programming and Design</i> at the University of North Carolina Wilmington. The project requirements were fairly concise. Our professor uploaded a picture of the "Conceptis Kakuro" puzzle game from a news paper and told us to write a program that only allows a user to enter valid values into each of its puzzle squares. Apart from that, it simply had to be able to read a puzzle of arbitrary size from a file, save an incomplete puzzle back to a file, clear the puzzle board, and implement one extra feature of our own choosing. 
 
 <h2>The Project</h2>
 The program opens with a landing page where the user can select a random game (a randomly generated 6x6, 8x8, or 10x10 puzzle board), or to load a game from a saved file. We gave it the name <i>Taidana Kakuro</i>, Japanese for lazy kakuro, because the way we implemented it, it's not much of a challenge. The user can also select from any of the normal menu options.
-
+<br/>
 <img src="https://raw.githubusercontent.com/No-Life-King/Kakuro/master/Resources/img/landing_page.png"/>
 
 If the user selects "new" from the game menu, the puzzle below will be loaded, which is a virtual copy of the picture of the puzzle that our professor uploaded as an example. Gameplay is simple, the user clicks on any square and the valid numbers for each square will drop down below. Just as in normal kakuro, the row values must add up to the sum to the left, and the column values must add up to the sum on top. No value may be repeated in any row or column. Our gameboard automatically adjusts to entered values. 
