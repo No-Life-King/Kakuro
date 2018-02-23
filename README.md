@@ -3,7 +3,7 @@ This project was completed by Phil Smith and Bobby Palmer during the fall 2017 s
 
 <h2>The Project</h2>
 The program opens with a landing page where the user can select a random game (a randomly generated 6x6, 8x8, or 10x10 puzzle board), or to load a game from a saved file. We gave it the name <i>Taidana Kakuro</i>, Japanese for lazy kakuro, because the way we implemented it, it's not much of a challenge. The user can also select from any of the normal menu options.
-
+<br/>
 <br/>
 <img src="https://raw.githubusercontent.com/No-Life-King/Kakuro/master/Resources/img/landing_page.png"/>
 
